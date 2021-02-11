@@ -1,0 +1,498 @@
+{% extends "blog/base.html" %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+    <link href="{% static 'css/profile.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/form.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+    {% if request.user.id == user_id %}
+
+        <div class="modal fade" tabindex="-1" id="profileImgModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change profile picture</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ img_form }}
+                            <div class="input-container">
+                                <button type="button" id="getImg" class="input">Upload the image</button>
+                                <div class="icon-wrapper">
+                                    <i class="far fa-image"></i>
+                                </div>
+                            </div>
+                            <script>
+                                document.getElementById('id_image').onchange = function(){
+                                    document.getElementById("getImg").innerHTML = document.getElementById("id_image").value.split("\\").pop()
+                                };
+                                document.getElementById('getImg').onclick = function(){
+                                    document.getElementById('id_image').click();
+                                };
+                            </script>
+                            <button type="submit" class="btn btn-primary" name="imgbutton">Change</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="profileBgModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change profile background</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ bg_form }}
+                            <div class="input-container">
+                                <button type="button" id="getBg" class="input">Upload the background</button>
+                                <div class="icon-wrapper">
+                                    <i class="far fa-image"></i>
+                                </div>
+                            </div>
+                            <script>
+                                document.getElementById('id_background').onchange = function(){
+                                    document.getElementById("getBg").innerHTML = document.getElementById("id_background").value.split("\\").pop()
+                                };
+
+                                document.getElementById('getBg').onclick = function(){
+                                    document.getElementById('id_background').click();
+                                };
+                            </script>
+                            <button type="submit" class="btn btn-primary" name="bgbutton">Change</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="profileBioModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change profile bio</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {% for field in bio_form %}
+                                {{ field.label }}
+                                <div class="input-container">
+                                    {{ field|add_class:"input" }}
+                                    <div class="icon-wrapper">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary" name="biobutton">Change</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="profileIntroModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change profile intro</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {% for field in intro_form %}
+                                {{ field.label }}
+                                <div class="input-container">
+                                    {{ field|add_class:"input" }}
+                                    <div class="icon-wrapper">
+                                        <i class="
+                                            {% if field.label == 'Birth date' %}
+                                                far fa-calendar-alt
+                                            {% elif field.label == 'Gender' %}
+                                                fas fa-venus-mars
+                                            {% elif field.label == 'Country' %}
+                                                fas fa-globe-europe
+                                            {% endif %}"
+                                        ></i>                                 
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary" name="introbutton">Change</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <header>
+
+            <!-- Main -->
+
+            <div class="container">
+                <div class="card profile-img">
+                    <a role="button" data-bs-toggle="modal" data-bs-target="#profileBgModal">
+                        <img src="/{{ view_user.profile.background }}" class="card-img" alt="Profile Background">
+                    </a>
+                    <a role="button" data-bs-toggle="modal" data-bs-target="#profileImgModal">
+                        <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="130" class="rounded-circle img">
+                    </a>
+                </div>
+                <h2><b>{{ view_user.get_full_name }}</b></h2>
+                <h5>{{ view_user.username }}</h5>
+                <hr>
+                <div class="links">
+                    <a class="btn full-btn" href="{% url 'profile_settings' %}"><i class="fas fa-cog"></i> Settings</a>
+                    <a class="btn full-btn" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div> 
+            </div>
+
+            <!-- Main -->
+
+        </header>
+
+        <div class="container" style="margin-top: 30px">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Bio</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-bio">{{ view_user.profile.bio }}</div>
+                            <div class="card-link"><a data-bs-toggle="modal" href="" role="button" data-bs-target="#profileBioModal">Edit Bio</a></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Intro</div>
+                            <div class="card-link"><a role="button" data-bs-toggle="modal" data-bs-target="#profileIntroModal" href="">Edit Intro</a></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-intro">Lives in: <b>{{ view_user.profile.country }}</b></div>
+                            <div class="card-intro">Born in: <b>{{ view_user.profile.birth_date }}</b></div>
+                            <div class="card-intro">Joined since: <b>{{ view_user.date_joined }}</b></div>
+                            <div class="card-intro">Gender: <b>{{ view_user.profile.gender }}</b></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Friends</div>
+                            {% if friends.count != 0 %}
+                                <div class="card-link"><a href="">See All Friends</a></div>
+                            {% else %}
+                                <div class="card-link"><a href="{% url 'home' %}">See all Users</a></div>
+                            {% endif %}
+                            <div class="card-subtitle">{{ friends_count }} Friends</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+
+                                <!-- Friends -->
+
+                                {% for friend in friends %}
+                                    {% if view_user.username == friend.user.username %}
+
+                                        <div class="col-4">
+                                            <div class="friend-card">
+                                                <a href="{{ friend.friend.id }}">
+                                                    <img src="/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                    <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    {% else %}
+                                        
+                                        <div class="col-4">
+                                            <div class="friend-card">
+                                                <a href="{{ friend.user.id }}">
+                                                    <img src="/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                    <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if friends.count == 0 %}
+                                    <h5>Get some friends!</h5>
+                                {% endif %}
+
+                                <!-- Friends -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-8 col-lg-12">
+
+                    <div class="card" id="mind">
+                        <div class="card-body">
+                            <form action="" method="POST" enctype="multipart/form">
+                                {% csrf_token %}
+                                <div class="input-container">
+                                    <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="70">
+                                    <textarea type="text" name="content" placeholder="What's on your mind?" class="input"></textarea>
+                                    <button type="submit" class="btn full-btn" name="mindbutton"><i class="fas fa-paper-plane"></i></button>
+                                </div>
+                                <div class="sub-inputs">
+                                    <hr>
+                                    <input type="file" accept="image/*" id="image">
+                                    <input type="file" accept="video/*" id="video">
+                                    <input type="file" id="file">
+
+                                    <script>
+                                        function upload(parameter){
+                                            document.getElementById(parameter).click()
+                                        };
+                                    </script>
+
+                                    <button type="button" onclick="upload('image');" id="getImage" class="btn full-btn"><i class="fas fa-file-image"></i> Images</button>
+                                    <button type="button" onclick="upload('video')" id="getVideo" class="btn full-btn"><i class="fas fa-file-video"></i> Videos</button>
+                                    <button type="button" onclick="upload('file')" id="getFile" class="btn full-btn"><i class="fas fa-file-alt"></i> Files</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Posts -->
+
+                    {% for post in posts %}
+                        <div class="card posts">
+                            <div class="card-header">
+                                <a href="{% url 'profile' post.author.id %}">
+                                    <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle">
+                                </a>
+                                <div class="header-text">
+                                    <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
+                                    <p><i class="fas fa-caret-right"></i> {{ post.date_posted }}</p>
+                                </div>
+
+                                <a href="" id="postDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h fa-lg"></i>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="postDropMenu">
+                                    <li><a class="dropdown-item" href=""><i class="fas fa-save"></i> Save post</a></li>
+                                    <li><a class="dropdown-item" href=""><i class="fas fa-thumbs-up"></i> Like post</a></li>
+                                    <li><a class="dropdown-item" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
+                                    <hr>
+                                    <li><a class="dropdown-item" href="">Settings</a></li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <p class="post-content">{{ post.content }}</p>
+                                <div class="up-like-comment">
+                                    <p class="post-likes"><i class="fas fa-thumbs-up"></i> 6</p>
+                                    <p class="post-comments">12 Comments</p>
+                                </div>
+                                <div class="down-like-comment">                    
+                                    <hr>
+                                    <a href="" class="btn full-btn like"><i class="fas fa-thumbs-up"></i> Like</a>
+                                    <a href="" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <!-- Posts -->
+
+                </div>
+            </div>
+        </div>
+    
+    {% else %}
+
+        <div class="modal fade" tabindex="-1" id="removeFriend" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h5 class="modal-title">Are you sure you want to remove {{ view_user.get_full_name }}?</h5>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn full-btn btn-danger" name="removefriend">Remove</button>
+                            <a class="btn full-btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back">
+            <a href="{% url 'profile' request.user.id %}"><h5>Your profile <i class="fas fa-arrow-right"></i></h5></a>
+        </div>
+
+        <header>
+
+            <!-- Main -->
+            
+            <div class="container">
+                <div class="card profile-img">
+                    <a role="button" data-bs-toggle="modal" data-bs-target="#profileBgModal">
+                        <img src="/{{ view_user.profile.background }}" class="card-img" alt="Profile Background">
+                    </a>
+                    <a role="button" data-bs-toggle="modal" data-bs-target="#profileImgModal">
+                        <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="130" class="rounded-circle img">
+                    </a>
+                </div>
+                <h2><b>{{ view_user.get_full_name }}</b></h2>
+                <h5>{{ view_user.username }}</h5>
+                <hr>
+                <div class="links">
+
+                    {% if is_friend == True %}
+                        {% csrf_token %}
+                        <a class="btn full-btn" role="button" data-bs-toggle="modal" data-bs-target="#removeFriend"><i class="fas fa-user-minus"></i> Remove friend</a>
+                    {% else %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn full-btn" name="addfriend"><i class="fas fa-user-plus"></i> Add friend</button>
+                        </form>
+                    {% endif %}
+
+                </div> 
+            </div>
+
+            <!-- Main -->
+
+        </header>
+
+        <div class="container" style="margin-top: 30px">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Bio</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-bio">{{ view_user.profile.bio }}</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Intro</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-intro">Lives in: <b>{{ view_user.profile.country }}</b></div>
+                            <div class="card-intro">Born in: <b>{{ view_user.profile.birth_date }}</b></div>
+                            <div class="card-intro">Joined since: <b>{{ view_user.date_joined }}</b></div>
+                            <div class="card-intro">Gender: <b>{{ view_user.profile.gender }}</b></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Friends</div>
+                            <div class="card-link"><a href="">See All Friends</a></div>
+                            <div class="card-subtitle">{{ friends_count }} Friends</div>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="row">
+
+                                <!-- Friends -->
+
+                                {% for friend in friends %}
+                                    {% if view_user.username == friend.user.username %}
+
+                                        <div class="col-4">
+                                            <div class="friend-card">
+                                                <a href="{{ friend.friend.id }}">
+                                                    <img src="/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                    <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    {% else %}
+                                        
+                                        <div class="col-4">
+                                            <div class="friend-card">
+                                                <a href="{{ friend.user.id }}">
+                                                    <img src="/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                    <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    {% endif %}
+                                {% endfor %}
+
+                                <!-- Friends -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-8 col-lg-12">
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <!-- Posts -->
+
+                            {% for post in posts %}
+                                <div class="card posts">
+                                    <div class="card-header">
+                                        <a href="{% url 'profile' post.author.id %}">
+                                            <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle">
+                                        </a>
+                                        <div class="header-text">
+                                            <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
+                                            <p><i class="fas fa-caret-right"></i> {{ post.date_posted }}</p>
+                                        </div>
+
+                                        <a href="" id="postDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h fa-lg"></i>
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="postDropMenu">
+                                            <li><a class="dropdown-item" href=""><i class="fas fa-save"></i> Save post</a></li>
+                                            <li><a class="dropdown-item" href=""><i class="fas fa-thumbs-up"></i> Like post</a></li>
+                                            <li><a class="dropdown-item" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
+                                            <hr>
+                                            <li><a class="dropdown-item" href="">Settings</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="post-content">{{ post.content }}</p>
+                                        <div class="up-like-comment">
+                                            <p class="post-likes"><i class="fas fa-thumbs-up"></i> 6</p>
+                                            <p class="post-comments">12 Comments</p>
+                                        </div>
+                                        <div class="down-like-comment">                    
+                                            <hr>
+                                            <a href="" class="btn full-btn like"><i class="fas fa-thumbs-up"></i> Like</a>
+                                            <a href="" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <!-- Posts -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+{% endblock %}

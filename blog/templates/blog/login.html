@@ -1,0 +1,52 @@
+{% extends 'blog/base.html' %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+    <div class="login-wrapper">
+        <div class="form-wrapper">
+            <h1>Login</h1>
+            <hr>
+            <form action="" method="POST">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    {{ field.label }}
+                    <div class="input-container">
+                        {{ field|add_class:"input" }}
+                        <div class="icon-wrapper">
+                            <i class="
+                                {% if field.label == 'Username' %}
+                                    fas fa-user
+                                {% elif field.label == 'Password' %}
+                                    fas fa-key
+                                {% endif %}
+                            "></i>
+                        </div>
+                    </div>
+                    {% if field.errors %}
+                        <div class="alert alert-danger custom-alert">
+                            {{ field.errors }} 
+                            {% if field.help_text %}
+                            <ul class="errorlist">
+                                <li>{{ field.help_text }}</li>
+                            </ul>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="bottom">
+                    <button type="submit" name="submit" class="btn btn-primary">Sign in</button>
+                    <a href="{% url 'register' %}" style="font-size: 18px;"><u><i>Need an account?</i></u></a>                        
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

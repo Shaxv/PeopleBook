@@ -1,0 +1,286 @@
+:root{
+
+    /* Primary color in RGBA: rgba(96,176,244,1) */
+    --primary-color: #60b0f4;
+
+    --gray-1: #18191a;
+    --gray-2: #242526;
+    --light-gray: #3a3b3c;
+
+    --error-color: #e85e6c;
+    --success-color: #5ee883;
+
+    --border: 2px solid rgba(0,0,0,.125);
+    --border-radius: 8px;
+}
+
+body{
+    background: rgb(235, 235, 235);
+    color: white;
+    font-family: 'Quicksand', sans-serif;
+}
+
+/* */
+/* Alerts */
+/* */
+
+.alert{
+    margin: 10px;
+    max-width: 350px;
+}
+
+/* */
+/* Navigation Bar */
+/* */
+
+#navBar, footer{
+    background: #242526;
+}
+#navBar a{
+    font-size: 16px;
+}
+#navLogo{
+    width: 50px;
+}
+.custom-nav{
+    max-width: 96%;
+}
+.flex-row .dropdown .nav-item .nav-link{
+    color: rgba(255, 255, 255, 0.55);
+    margin-top: 12px;
+}
+.flex-row .dropdown .nav-item .nav-link:hover{
+    color: #C7C8C9;
+}
+.d-none{
+    margin-left: 150px;
+    text-align: center;
+}
+
+/* Dropdown */
+
+.dropdown-menu{
+    background-color: var(--gray-2);
+}
+.dropdown-item{
+    color: white;
+    transition: all .15s;
+}
+.dropdown-item:hover{
+    color: white;
+    background-color: var(--light-gray);
+}
+.dropdown-divider{
+    height: 3px;
+    color: #999999;
+}
+
+/* */
+/* Main application */
+/* */
+
+body{
+    background: var(--gray-1);
+}
+.p-4{
+    margin-bottom: 0;
+}
+main{
+    margin: 60px 0;
+}
+.asteriskField{
+    padding-left: 4px;
+    color: red;
+}
+.full-btn{
+    text-align: center;
+    color: white;
+    padding: 8px;
+    margin-top: 16px;
+    border-radius: var(--border-radius);
+}
+.full-btn:hover{
+    background-color: var(--light-gray);
+    color: white;
+}
+.full-btn:focus{
+    background: rgba(255, 255, 255, .2);
+    box-shadow: none;
+    transform: scale(0.95);
+}
+.full-btn i{
+    margin-right: 6px;
+}
+
+/* */
+/* Posts */
+/* */
+
+.posts .card-header .dropdown-toggle::after{
+    display: none;
+}
+.posts .card-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.posts .card-header h4{
+    color: white;
+    position: absolute;
+    left: 80px;
+    top: 14px;
+}
+.posts .card-header h4:hover{
+    text-decoration: underline;
+}
+.posts .header-text p{
+    color: gray;
+    position: absolute;
+    left: 80px;
+    top: 40px;
+}
+#postDropMenu{
+    color: gray;
+    position: absolute;
+    right: 16px;
+    top: 14px;
+}
+#postDropMenu:hover{
+    filter: brightness(150%);
+}
+.posts .dropdown-menu a i{
+    padding-right: 6px;
+}
+.posts .card-body{
+    margin-top: 50px;
+}
+.posts .dropdown-menu hr{
+    color: white;
+    margin: 8px;
+}
+.posts .card-header img{
+    position: absolute;
+    top: 10px;
+    left: 12px;
+}
+.posts .card-header img:hover{
+    opacity: .85;
+}
+
+
+.post-likes i{
+    color: white;
+    font-size: 14px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    padding: 8px;
+    margin-right: 4px;
+}
+.up-like-comment{
+    position: relative;
+    margin-bottom: 44px;
+}
+.post-likes{
+    color: gray;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.post-comments{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.post-comments:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+.down-like-comment{
+    margin-top: 60px;
+}
+.down-like-comment hr{
+    margin: 8px 0;
+}
+.down-like-comment .full-btn{
+    margin: 0;
+    width: 49.5%;
+}
+.like i, .comment i{
+    margin-right: 6px;
+}
+.like i{
+    color: var(--primary-color);
+}
+.comment i{
+    color: var(--primary-color);
+}
+
+/* */
+/* Cards */
+/* */
+
+.card{
+    border-radius: var(--border-radius);
+    background-color: var(--gray-2);
+    border: none;
+    margin-bottom: 25px;
+}
+.card-header{
+    background-color: unset;
+    border: none;
+}
+.card-title{
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.card-subtitle{
+    color: #bdbaba;
+    font-size: 18px;
+    font-weight: 500;
+}
+.card-link{
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+.card-link a{
+    font-size: 18px;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: all .15s
+}
+.card-link a:hover{
+    text-decoration: underline;
+}
+
+/* Friend card */
+
+.friend-card{
+    width: 50%;
+    white-space: nowrap;
+}
+.friend-card img{
+    height: 110px;
+    width: 110px;
+    padding-bottom: 6px;
+    border-radius: var(--border-radius);
+}
+.friend-card a{
+    text-decoration: none;
+}
+.friend-title{
+    color: white;
+    font-size: 15px;
+    font-weight: 400;
+    padding-bottom: 12px;
+}
+
+/* */
+/* Modal */
+/* */
+
+.modal-content{
+    background-color: var(--gray-2);
+}

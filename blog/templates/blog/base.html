@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <script src="https://kit.fontawesome.com/03b106c0ee.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+        <script src="{% static 'js/bootstrap.js' %}"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{% static 'pics/small_logo.png' %}">
+        <title>
+            {% if title %}
+                PeopleBook - {{ title }}
+            {% else %}
+                PeopleBook
+            {% endif %}
+        </title>
+        {% block head %}
+        {% endblock %}
+        <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+    </head>
+    <body>
+
+        {% include "blog/navbar.html" %}
+
+        {% if messages %}
+            <div class="messages container">
+                {% for message in messages %}
+                    <div class="fixed-top alert alert-dismissible fade show {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <main role="main">
+            {% block content %}
+            {% endblock %}
+        </main>     
+
+        {% include "blog/footer.html" %}
+
+    </body>
+</html>

@@ -1,0 +1,94 @@
+{% load static %}
+
+<!-- Navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark" id="navBar">
+  <div class="container-fluid justify-content-between custom-nav">
+
+    <!-- Left elements -->
+
+    <div class="d-flex">
+      <a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="{% url 'home' %}">
+        <img src="{% static 'pics/small_logo.png' %}" alt="Logo" id="navLogo">
+      </a>
+    </div>
+
+    <!-- Left elements -->
+
+    <!---->
+
+    <!-- Center elements -->
+
+    <ul class="navbar-nav flex-row d-none d-md-flex">
+      <li class="nav-item me-3 me-lg-1">
+      </li>
+        <li class="nav-item me-3 me-lg-1">
+          <a class="nav-link" href="{% url 'home' %}" title="Home">
+            <span><i class="fas fa-home fa-lg"></i></span>
+          </a>
+        </li>
+
+        <li class="nav-item me-3 me-lg-1">
+          <a class="nav-link" href="{% url 'posts' %}" title="Posts">
+            <span><i class="fas fa-flag fa-lg"></i></span>
+          </a>
+        </li>
+
+        <li class="nav-item me-3 me-lg-1">
+          <a class="nav-link" href="{% url 'friends' %}" title="Friends">
+            <span><i class="fas fa-users fa-lg"></i></span>
+            <span class="badge rounded-pill badge-notification bg-danger">2</span>
+          </a>
+        </li>
+    </ul>
+
+    <!-- Center elements -->
+
+    <!---->
+
+    <!-- Right elements -->
+
+    {% if request.user.is_authenticated %}
+
+    <ul class="flex-row">
+        <div class="dropdown">
+            <li class="nav-item me-3 me-lg-1" style="list-style-type: none;">
+                <a class="nav-link d-sm-flex align-items-sm-center dropdown-toggle" href="" role="button" id="userDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="/{{ request.user.profile.image }}" class="rounded-circle" height="24" alt="ProfilePicture">
+                  <strong class="d-none d-sm-block ms-1">{{ request.user.get_full_name }}</strong>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="userDropMenu">
+                    <li><a class="dropdown-item" href="{% url 'profile' request.user.id %}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a></li>
+                    {% if user.is_superuser %}
+                      <li><a class="dropdown-item" href="/admin/" target="_blank">Admin panel</a></li>
+                    {% endif %}
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </li>
+        </div>
+    </ul>
+
+    {% else %}
+
+    <ul class="flex-row">
+        <div class="dropdown">
+            <li class="nav-item me-3 me-lg-1" style="list-style-type: none;">
+                <a class="nav-link d-sm-flex align-items-sm-center dropdown-toggle" href="" role="button" id="notUserDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="far fa-user fa-lg"></i>
+                    <strong class="d-none d-sm-block ms-1">Guest</strong>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="notUserDropMenu">
+                    <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                    <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                </ul>
+            </li>
+        </div>
+    </ul>
+
+    {% endif %}
+
+    <!-- Right elements -->
+  
+  </div>
+</nav>
