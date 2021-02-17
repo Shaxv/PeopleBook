@@ -238,6 +238,25 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Liked posts -->
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Liked posts</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for post in liked_posts %}
+                                    {{ post.author }}
+                                    {{ post.date_posted }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Liked posts-->
+
                 </div>
 
                 <div class="col-xxl-8 col-lg-12">
@@ -288,18 +307,19 @@
                                     <i class="fas fa-ellipsis-h fa-lg"></i>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="postDropMenu">
-                                    <li><a class="dropdown-item" href=""><i class="fas fa-save"></i> Save post</a></li>
-                                    <li><a class="dropdown-item" href=""><i class="fas fa-thumbs-up"></i> Like post</a></li>
-                                    <li><a class="dropdown-item" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
+                                    <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-save"></i> Save post</a></li>
+                                    <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-thumbs-up"></i> Like post</a></li>
+                                    <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
                                     <hr>
-                                    <li><a class="dropdown-item" href="">Settings</a></li>
+                                    <li><a class="dropdown-item drop-danger" href="{% url 'remove_post' post.id %}"><i class="fas fa-trash-alt"></i> Remove post</a></li>
+                                    <li><a class="dropdown-item drop-primary" href="{% url 'post_settings' post.id %}">Settings</a></li>
                                 </ul>
                             </div>
                             <div class="card-body">
                                 <p class="post-content">{{ post.content }}</p>
                                 <div class="up-like-comment">
-                                    <p class="post-likes"><i class="fas fa-thumbs-up"></i> 6</p>
-                                    <p class="post-comments">12 Comments</p>
+                                    <p class="post-likes"><i class="fas fa-thumbs-up"></i> {{ post.likes.count }}</p>
+                                    <p class="post-comments">{{ post.comments.count }} Comments</p>
                                 </div>
                                 <div class="down-like-comment">                    
                                     <hr>
@@ -307,13 +327,42 @@
                                     <a href="" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
                                     <hr>
                                 </div>
+                                {% for comment in comments %}
+                                
+                                    {% if comment.post.id == post.id %}
+                                        <div class="comment">
+                                            <div class="card-header">
+                                                <a href="{% url 'profile' comment.author.id %}">
+                                                    <img src="/{{ comment.author.profile.image }}" height="36">
+                                                </a>
+                                            </div>
+                                            <div class="comment-body">
+                                                <a href="{% url 'profile' comment.author.id %}">
+                                                    <h5>{{ comment.author.get_full_name }}</h5>
+                                                </a>
+                                                <p class="post-content">{{ comment.content }}</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                {% endfor %}
+                                <form action="" method="POST" id="comment">
+                                    <div class="post-wrapper">
+                                        {% csrf_token %}
+                                        <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="36">
+                                        <div class="input-container">
+                                            <input type="hidden" value="{{ post.id }}" name="post_id">
+                                            <textarea type="text" name="content" placeholder="Write a comment!" class="input"></textarea>
+                                            <button type="submit" class="btn full-btn" name="commentbutton"><i class="fas fa-paper-plane"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     {% endfor %}
 
-                    <!-- Posts -->
+                    <!-- Posts -->  
 
-                </div>
             </div>
         </div>
     
@@ -443,53 +492,83 @@
 
                 <div class="col-xxl-8 col-lg-12">
 
-                    <div class="card">
-                        <div class="card-body">
+                    <!-- Posts -->
 
-                            <!-- Posts -->
-
-                            {% for post in posts %}
-                                <div class="card posts">
-                                    <div class="card-header">
-                                        <a href="{% url 'profile' post.author.id %}">
-                                            <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle">
-                                        </a>
-                                        <div class="header-text">
-                                            <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
-                                            <p><i class="fas fa-caret-right"></i> {{ post.date_posted }}</p>
-                                        </div>
-
-                                        <a href="" id="postDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h fa-lg"></i>
-                                        </a>
-                                        <ul class="dropdown-menu" aria-labelledby="postDropMenu">
-                                            <li><a class="dropdown-item" href=""><i class="fas fa-save"></i> Save post</a></li>
-                                            <li><a class="dropdown-item" href=""><i class="fas fa-thumbs-up"></i> Like post</a></li>
-                                            <li><a class="dropdown-item" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
-                                            <hr>
-                                            <li><a class="dropdown-item" href="">Settings</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="post-content">{{ post.content }}</p>
-                                        <div class="up-like-comment">
-                                            <p class="post-likes"><i class="fas fa-thumbs-up"></i> 6</p>
-                                            <p class="post-comments">12 Comments</p>
-                                        </div>
-                                        <div class="down-like-comment">                    
-                                            <hr>
-                                            <a href="" class="btn full-btn like"><i class="fas fa-thumbs-up"></i> Like</a>
-                                            <a href="" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
-                                            <hr>
-                                        </div>
-                                    </div>
+                    {% for post in posts %}
+                        <div class="card posts">
+                            <div class="card-header">
+                                <a href="{% url 'profile' post.author.id %}">
+                                    <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle">
+                                </a>
+                                <div class="header-text">
+                                    <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
+                                    <p><i class="fas fa-caret-right"></i> {{ post.date_posted }}</p>
                                 </div>
-                            {% endfor %}
 
-                            <!-- Posts -->
+                                <a href="" id="postDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h fa-lg"></i>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="postDropMenu">
+                                    <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-save"></i> Save post</a></li>
+                                    <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-thumbs-up"></i> Like post</a></li>
+                                    <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
+                                    <hr>
+                                    <li><a class="dropdown-item drop-danger" href="{% url 'remove_post' post.id %}"><i class="fas fa-trash-alt"></i> Remove post</a></li>
+                                    <li><a class="dropdown-item drop-primary" href="{% url 'post_settings' post.id %}">Settings</a></li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <p class="post-content">{{ post.content }}</p>
+                                <div class="up-like-comment">
+                                    <p class="post-likes"><i class="fas fa-thumbs-up"></i> {{ post.likes.count }}</p>
 
+                                    <p class="post-comments">
+                                        {{ post.comments.count }} Comments
+                                    </p>
+
+                                </div>
+                                <div class="down-like-comment">                    
+                                    <hr>
+                                    <a href="" class="btn full-btn like"><i class="fas fa-thumbs-up"></i> Like</a>
+                                    <a href="" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                    <hr>
+                                </div>
+                                {% for comment in comments %}
+
+                                    {% if comment.post.id == post.id %}
+                                        <div class="comment">
+                                            <div class="card-header">
+                                                <a href="{% url 'profile' comment.author.id %}">
+                                                    <img src="/{{ comment.author.profile.image }}" height="36">
+                                                </a>
+                                            </div>
+                                            <div class="comment-body">
+                                                <a href="{% url 'profile' comment.author.id %}">
+                                                    <h5>{{ comment.author.get_full_name }}</h5>
+                                                </a>
+                                                <p class="post-content">{{ comment.content }}</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                {% endfor %}
+                                <form action="" method="POST">
+                                    <div class="post-wrapper">
+                                        {% csrf_token %}
+                                        <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
+                                        <div class="input-container">
+                                            <input type="hidden" value="{{ post.id }}" name="post_id">
+                                            <textarea type="text" name="content" placeholder="Write a comment!" class="input"></textarea>
+                                            <button type="submit" class="btn full-btn" name="commentbutton"><i class="fas fa-paper-plane"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    {% endfor %}
+
+                    <!-- Posts -->
+
                 </div>
             </div>
         </div>

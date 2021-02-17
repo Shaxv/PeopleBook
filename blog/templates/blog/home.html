@@ -4,6 +4,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/home.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/form.css'%}" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -12,7 +13,7 @@
         <div class="row">
             <div class="col-8">
                 {% for post in posts %}
-                    <div class="card posts">
+                    <div class="card posts" id="post{{forloop.counter}}">
                         <div class="card-header">
                             <a href="{% url 'profile' post.author.id %}">
                                 <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle">
@@ -26,28 +27,77 @@
                                 <i class="fas fa-ellipsis-h fa-lg"></i>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="postDropMenu">
-                                <li><a class="dropdown-item" href=""><i class="fas fa-save"></i> Save post</a></li>
-                                <li><a class="dropdown-item" href=""><i class="fas fa-thumbs-up"></i> Like post</a></li>
-                                <li><a class="dropdown-item" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
+                                <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-save"></i> Save post</a></li>
+                                <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-thumbs-up"></i> Like post</a></li>
+                                <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
                                 {% if post.author == request.user %}
                                     <hr>
-                                    <li><a class="dropdown-item" href="{% url 'remove_post' post.id %}"><i class="fas fa-trash-alt"></i> Remove post</a></li>
-                                    <li><a class="dropdown-item" href="">Settings</a></li>
+                                    <li><a class="dropdown-item drop-danger" href="{% url 'remove_post' post.id %}"><i class="fas fa-trash-alt"></i> Remove post</a></li>
+                                    <li><a class="dropdown-item drop-primary" href="{% url 'post_settings' post.id %}">Settings</a></li>
                                 {% endif %}
                             </ul>
                         </div>
                         <div class="card-body">
                             <p class="post-content">{{ post.content }}</p>
                             <div class="up-like-comment">
-                                <p class="post-likes"><i class="fas fa-thumbs-up"></i> 6</p>
-                                <p class="post-comments">12 Comments</p>
+                                <p class="post-likes"><i class="fas fa-thumbs-up"></i> <span id="likeCount{{forloop.counter}}">{{ post.likes.count }}</span></p>
+                                <p class="post-comments">{{ post.comments.count }} Comments</p>
                             </div>
                             <div class="down-like-comment">                    
                                 <hr>
-                                <a href="" class="btn full-btn like"><i class="fas fa-thumbs-up"></i> Like</a>
-                                <a href="" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                <form onsubmit="like({{forloop.counter}});return false;var x = true" id="likeForm{{forloop.counter}}">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ post.id }}" name="post_id">
+                                    <button type="submit" class="btn full-btn like {% for likes in post.likes.all %}{% if request.user == likes.user %}active {% endif %}{% endfor %}" name="likebutton" id="likeContainer{{forloop.counter}}"><i class="fas fa-thumbs-up" id="likeIcon{{forloop.counter}}"></i> <span>Like</span></button>
+                                    <a onclick="focusComment({{forloop.counter}})" id="commentContainer{{forloop.counter}}" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                </form>
+                                <script>
+                                    {% for likes in post.likes.all %}
+                                        {% if request.user == likes.user %}
+                                            $(document).ready(function(){
+                                                alreadyLiked({{forloop.counter}})
+                                                changeLikeCount(id={{forloop.counter}}, status="me")
+                                            })
+                                        {% endif %}
+                                    {% endfor %}
+                                </script>
                                 <hr>
                             </div>
+
+                            {% for comment in comments %}
+
+                                {% if comment.post.id == post.id %}
+                                    <div class="comment">
+                                        <div class="card-header">
+                                            <a href="{% url 'profile' comment.author.id %}">
+                                                <img src="/{{ comment.author.profile.image }}" height="36">
+                                            </a>
+                                        </div>
+                                        <div class="comment-body">
+                                            <a href="{% url 'profile' comment.author.id %}">
+                                                <h5>{{ comment.author.get_full_name }}</h5>
+                                            </a>
+                                            <p class="post-content">{{ comment.content }}</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+
+                            {% if request.user.is_authenticated %}
+                                <form action="" method="POST" id="comment">
+                                    <div class="post-wrapper">
+                                        {% csrf_token %}
+                                        <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
+                                        <div class="input-container">
+                                            <input type="hidden" value="{{ post.id }}" name="post_id">
+                                            <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
+                                            <button type="submit" class="btn full-btn" name="commentbutton"><i class="fas fa-paper-plane"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            {% endif %}
+
                         </div>
                     </div>
                 {% endfor %}

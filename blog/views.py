@@ -2,25 +2,56 @@ from django.shortcuts import render, redirect, get_object_or_404
 from blog.models import *
 from blog.forms import *
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import os
 from django.db.models import Q
+import json
+from django.forms.models import model_to_dict
 
 def Home(request):
 
-    posts = Blog.objects.all()
-    users = User.objects.all()
-    user_count = User.objects.count()
+    if request.is_ajax():
+        post = Post.objects.get(id=request.POST["post"])
+        user = get_object_or_404(User, id=request.user.id)
+        like_post(post=post, user=user)
+        
+        data = [{}]  # To retreive user and post as well [{"data": model_to_dict(user), "data1": model_to_dict(post)}]
+        response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+        return response
 
-    context = {
-        'title': 'Home',
-        'posts': posts,
-        'users': users,
-        'user_count': user_count,
-    }
-    return render(request, "blog/home.html", context)
+
+    if request.method == "POST":
+        if 'likebutton' in request.POST:            
+            post = get_object_or_404(Post, id=request.POST["post_id"])
+            like = Like.objects.filter(post=post, user=request.user)
+            if like:
+                messages.error(request, "You already liked this post!")
+            else:
+                like_post(post=post, user=request.user)
+            return HttpResponseRedirect(request.path_info)
+            
+        elif 'commentbutton' in request.POST:
+            post = get_object_or_404(Post, id=request.POST["post_id"])
+            create_comment(post=post, author=request.user, content=request.POST["content"])
+            messages.success(request, f"Successfully created a comment!")
+            return HttpResponseRedirect(request.path_info)
+
+    else:
+        posts = Post.objects.all()
+        users = User.objects.all()
+        user_count = User.objects.count()
+        comments = Comment.objects.all()
+
+        context = {
+            'title': 'Home',
+            'posts': posts,
+            'users': users,
+            'user_count': user_count,
+            'comments': comments,
+        }
+        return render(request, "blog/home.html", context)
 
 def Login(request):
 
@@ -95,7 +126,7 @@ def create_profile(user, birth_date, image, country, gender):
     u.save()
 
 def create_post(author, content):
-    p = Blog(author=author, content=content)
+    p = Post(author=author, content=content)
     p.save()
 
 def create_friendship(user, friend):
@@ -106,6 +137,13 @@ def delete_friendship(user, friend):
     f = Friend.objects.filter(user=user, friend=friend)
     f.delete()
 
+def create_comment(post, author, content):
+    p = Comment(post=post, author=author, content=content)
+    p.save()
+
+def like_post(post, user):
+    l = Like(post=post, user=user)
+    l.save()
 
 @login_required
 def Logout(request):
@@ -116,7 +154,7 @@ def Logout(request):
 @login_required
 def Profile_view(request, user_id):
     view_user = get_object_or_404(User, pk=user_id)
-    profile = request.user.profile
+    profile = request.user.profile        
 
     if request.method == "POST":
         img_form = ProfileImgForm(request.FILES, request.POST, instance=profile)
@@ -197,10 +235,15 @@ def Profile_view(request, user_id):
         
         elif 'removefriend' in request.POST:
             delete_friendship(user=request.user, friend=view_user)
-            messages.success(request, "kurva anyád nem vagy a barátom")#f"Successfully removed {view_user}!")
+            messages.success(request, f"Successfully removed {view_user}!")
             return HttpResponseRedirect(request.path_info)
 
-            
+        elif 'commentbutton' in request.POST:
+            post = get_object_or_404(Post, id=request.POST["post_id"])
+            create_comment(post=post, author=request.user, content=request.POST["content"])
+            messages.success(request, f"Successfully created a comment!")
+            return HttpResponseRedirect(request.path_info)
+        
 
     else:
 
@@ -214,7 +257,10 @@ def Profile_view(request, user_id):
         is_friend = Friend.objects.filter(Q(user=view_user, friend=request.user) | Q(user=request.user, friend=view_user)).exists()
 
         users = User.objects.all()
-        posts = Blog.objects.filter(author=view_user).all()
+        posts = Post.objects.filter(author=view_user).all()
+        liked_posts = Like.objects.filter(user=view_user).all()
+
+        comments = Comment.objects.all()
 
         context = {
             'user_id': user_id,
@@ -226,9 +272,11 @@ def Profile_view(request, user_id):
             'intro_form': intro_form,
             'users': users,
             'posts': posts,
+            'comments': comments,
             'friends': friends,
             'is_friend': is_friend,
             'friends_count': friends_count,
+            'liked_posts': liked_posts,        
         }
         return render(request, "blog/profile.html", context)
 
@@ -246,7 +294,7 @@ def Profile_settings(request):
 
 @login_required
 def Posts(request):
-    blogs = Blog.objects.all()
+    blogs = Post.objects.all()
 
     context = {
         'blogs': blogs,
@@ -256,10 +304,33 @@ def Posts(request):
 
 @login_required
 def Remove_post(request, id):
-    post = Blog.objects.filter(id=id)
+    post = Post.objects.filter(id=id)
     post.delete()
     messages.success(request, "Successfully removed your post!")
-    return HttpResponseRedirect("")
+    return redirect("profile", request.user.id)
+
+@login_required
+def Post_settings(request, id):
+    post = Post.objects.get(id=id)
+
+    if request.method == "POST":
+        form = UpdatePost(request.POST, instance=post)
+        if form.is_valid():
+            post.content = request.POST["content"]
+            form.save()
+            messages.success(request, "Successfully updated your post!")
+            return redirect("profile", request.user.id)
+        else:
+            messages.error(request, "Error while updating!")
+            return HttpResponseRedirect(request.path_info)
+    else:
+        form = UpdatePost(instance=post)
+
+        context = {
+            'title': 'Post Settings',
+            'form': form,
+        }
+        return render(request, "blog/post_settings.html", context)
 
 @login_required
 def Friends_view(request):

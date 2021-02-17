@@ -57,13 +57,13 @@
                   <strong class="d-none d-sm-block ms-1">{{ request.user.get_full_name }}</strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="userDropMenu">
-                    <li><a class="dropdown-item" href="{% url 'profile' request.user.id %}">Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a></li>
+                    <li><a class="dropdown-item drop-primary" href="{% url 'profile' request.user.id %}">Profile</a></li>
+                    <li><a class="dropdown-item drop-primary" href="{% url 'profile_settings' %}">Settings</a></li>
                     {% if user.is_superuser %}
-                      <li><a class="dropdown-item" href="/admin/" target="_blank">Admin panel</a></li>
+                      <li><a class="dropdown-item drop-primary" href="/admin/" target="_blank">Admin panel</a></li>
                     {% endif %}
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    <li><a class="dropdown-item drop-danger" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </li>
         </div>
@@ -79,8 +79,8 @@
                     <strong class="d-none d-sm-block ms-1">Guest</strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="notUserDropMenu">
-                    <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
-                    <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                    <li><a class="dropdown-item drop-primary" href="{% url 'login' %}">Login</a></li>
+                    <li><a class="dropdown-item drop-primary  " href="{% url 'register' %}">Register</a></li>
                 </ul>
             </li>
         </div>

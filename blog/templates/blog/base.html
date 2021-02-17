@@ -3,6 +3,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://kit.fontawesome.com/03b106c0ee.js" crossorigin="anonymous"></script>
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -27,6 +28,12 @@
 
         {% include "blog/navbar.html" %}
 
+        <div id="test">
+        </div>
+
+        <div class="messages container" id="alert_box">
+        </div>
+
         {% if messages %}
             <div class="messages container">
                 {% for message in messages %}
@@ -44,6 +51,6 @@
         </main>     
 
         {% include "blog/footer.html" %}
-
+        <script src="{% static 'js/main.js' %}"></script>
     </body>
 </html>

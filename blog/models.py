@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+import json
 
 class Profile(models.Model):
     GENDER_CHOICES = (
@@ -31,7 +32,7 @@ class Friend(models.Model):
     def __str__(self):
         return f"{self.user} and {self.friend}"
 
-class Blog(models.Model):
+class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
@@ -39,3 +40,18 @@ class Blog(models.Model):
     def __str__(self):
         return f"{self.author}'s. {self.date_posted}"
     
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments", default=None)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    content = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.post} - {self.author}"
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes", default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes", default=None)
+
+    def __str__(self):
+        return f"{self.user} liked {self.post}"
