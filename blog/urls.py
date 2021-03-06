@@ -10,6 +10,5 @@ urlpatterns = [
     path('profile/<int:user_id>', views.Profile_view, name='profile'),
     path('profile/settings', views.Profile_settings, name="profile_settings"),
     path('logout/', views.Logout, name='logout'),
-    path('remove_post/<int:id>', views.Remove_post, name='remove_post'),
     path('posts/settings/<int:id>', views.Post_settings, name='post_settings'),
 ]

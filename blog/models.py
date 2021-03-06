@@ -7,7 +7,7 @@ class Profile(models.Model):
     GENDER_CHOICES = (
         ('Male', "Male"),
         ('Female', "Female"),
-        ('PREFER', "Prefer not to say"),
+        ('Prefer not to say', "Prefer not to say"),
     )
     COUNTRY_CHOICES = (
         ('Hungary', "Hungary"),
@@ -24,6 +24,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user}'s profile"
+
 
 class Friend(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user", default=None)
@@ -45,9 +46,13 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
+    likes = models.ManyToManyField(User, related_name="fasz", default=None)
 
     def __str__(self):
         return f"{self.post} - {self.author}"
+
+    class Meta:
+        ordering = ["-date_posted"]
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes", default=None)

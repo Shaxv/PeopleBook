@@ -8,38 +8,63 @@ from django.contrib import messages
 import os
 from django.db.models import Q
 import json
-from django.forms.models import model_to_dict
 
 def Home(request):
 
-    if request.is_ajax():
-        post = Post.objects.get(id=request.POST["post"])
-        user = get_object_or_404(User, id=request.user.id)
-        like_post(post=post, user=user)
-        
-        data = [{}]  # To retreive user and post as well [{"data": model_to_dict(user), "data1": model_to_dict(post)}]
-        response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
-        return response
+    if request.is_ajax() and request.method == "POST":
 
+        if 'like' in request.POST:
+            post = Post.objects.get(id=request.POST["post_id"])
+            user = get_object_or_404(User, id=request.user.id)
+            like_post(post=post, user=user)
 
-    if request.method == "POST":
-        if 'likebutton' in request.POST:            
-            post = get_object_or_404(Post, id=request.POST["post_id"])
-            like = Like.objects.filter(post=post, user=request.user)
-            if like:
-                messages.error(request, "You already liked this post!")
-            else:
-                like_post(post=post, user=request.user)
-            return HttpResponseRedirect(request.path_info)
-            
-        elif 'commentbutton' in request.POST:
-            post = get_object_or_404(Post, id=request.POST["post_id"])
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'unlike' in request.POST:
+            post = Post.objects.get(id=request.POST["post_id"])
+            user = get_object_or_404(User, id=request.user.id)
+            delete_like(post=post, user=user)
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'comment_like' in request.POST:
+            c = Comment.objects.get(id=request.POST["comment_id"])
+            c.likes.add(request.user.id)
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'comment_unlike' in request.POST:
+            c = Comment.objects.get(id=request.POST["comment_id"])
+            c.likes.remove(request.user.id)
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'post_remove' in request.POST:
+            post = Post.objects.get(id=request.POST["post_id"])
+            post.delete()
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'add_comment' in request.POST:
+            post = Post.objects.get(id=request.POST["comment_post_id"])
             create_comment(post=post, author=request.user, content=request.POST["content"])
-            messages.success(request, f"Successfully created a comment!")
-            return HttpResponseRedirect(request.path_info)
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
 
     else:
-        posts = Post.objects.all()
+        posts = Post.objects.order_by('-date_posted')
         users = User.objects.all()
         user_count = User.objects.count()
         comments = Comment.objects.all()
@@ -145,6 +170,10 @@ def like_post(post, user):
     l = Like(post=post, user=user)
     l.save()
 
+def delete_like(post, user):
+    l = Like.objects.filter(post=post, user=user)
+    l.delete()
+
 @login_required
 def Logout(request):
     logout(request)
@@ -155,6 +184,58 @@ def Logout(request):
 def Profile_view(request, user_id):
     view_user = get_object_or_404(User, pk=user_id)
     profile = request.user.profile        
+
+    if request.is_ajax() and request.method == "POST":
+
+        if 'like' in request.POST:
+            post = Post.objects.get(id=request.POST["post_id"])
+            user = get_object_or_404(User, id=request.user.id)
+            like_post(post=post, user=user)
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'unlike' in request.POST:
+            post = Post.objects.get(id=request.POST["post_id"])
+            user = get_object_or_404(User, id=request.user.id)
+            delete_like(post=post, user=user)
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'comment_like' in request.POST:
+            c = Comment.objects.get(id=request.POST["comment_id"])
+            c.likes.add(request.user.id)
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'comment_unlike' in request.POST:
+            c = Comment.objects.get(id=request.POST["comment_id"])
+            c.likes.remove(request.user.id)
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'post_remove' in request.POST:
+            post = Post.objects.get(id=request.POST["post_id"])
+            post.delete()
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
+
+        elif 'add_comment' in request.POST:
+            post = Post.objects.get(id=request.POST["comment_post_id"])
+            create_comment(post=post, author=request.user, content=request.POST["content"])
+
+            data = [{}]
+            response = JsonResponse(json.dumps(data, sort_keys=True, default=str, indent=4), safe=False)
+            return response
 
     if request.method == "POST":
         img_form = ProfileImgForm(request.FILES, request.POST, instance=profile)
@@ -223,11 +304,6 @@ def Profile_view(request, user_id):
                 messages.error(request, "Error while changing intro")
                 return HttpResponseRedirect(request.path_info)
         
-        elif 'mindbutton' in request.POST:
-            create_post(author=request.user, content=request.POST["content"])
-            messages.success(request, "Successfully created the post!")
-            return HttpResponseRedirect(request.path_info)
-
         elif 'addfriend' in request.POST:
             create_friendship(user=request.user, friend=view_user)
             messages.success(request, f"Successfully added {view_user}!")
@@ -257,7 +333,7 @@ def Profile_view(request, user_id):
         is_friend = Friend.objects.filter(Q(user=view_user, friend=request.user) | Q(user=request.user, friend=view_user)).exists()
 
         users = User.objects.all()
-        posts = Post.objects.filter(author=view_user).all()
+        posts = Post.objects.filter(author=view_user).order_by('-date_posted')
         liked_posts = Like.objects.filter(user=view_user).all()
 
         comments = Comment.objects.all()
@@ -276,7 +352,8 @@ def Profile_view(request, user_id):
             'friends': friends,
             'is_friend': is_friend,
             'friends_count': friends_count,
-            'liked_posts': liked_posts,        
+            'liked_posts': liked_posts,
+            'now': timezone.now,        
         }
         return render(request, "blog/profile.html", context)
 
@@ -292,7 +369,10 @@ def Profile_settings(request):
     }
     return render(request, "blog/settings.html", context)
 
-@login_required
+#@login_required
+
+
+
 def Posts(request):
     blogs = Post.objects.all()
 
@@ -300,14 +380,16 @@ def Posts(request):
         'blogs': blogs,
         'title': 'Posts',
     }
-    return render(request, "blog/posts.html", context)
 
-@login_required
-def Remove_post(request, id):
-    post = Post.objects.filter(id=id)
-    post.delete()
-    messages.success(request, "Successfully removed your post!")
-    return redirect("profile", request.user.id)
+    return render(request, "blog/posts.html")
+
+
+
+
+
+
+
+
 
 @login_required
 def Post_settings(request, id):

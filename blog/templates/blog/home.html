@@ -10,6 +10,7 @@
 {% block content %}
 
     <div class="container">
+        <div id="proba"></div>
         <div class="row">
             <div class="col-8">
                 {% for post in posts %}
@@ -20,7 +21,7 @@
                             </a>
                             <div class="header-text">
                                 <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
-                                <p><i class="fas fa-caret-right"></i> {{ post.date_posted }}</p>
+                                <p><i class="fas fa-caret-right"></i> {{ post.date_posted|date:"Y.m.d  G:i" }}</p>
                             </div>
 
                             <a href="" id="postDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
@@ -32,7 +33,10 @@
                                 <li><a class="dropdown-item drop-primary" href=""><i class="fas fa-share-alt"></i> Share post</a></li>
                                 {% if post.author == request.user %}
                                     <hr>
-                                    <li><a class="dropdown-item drop-danger" href="{% url 'remove_post' post.id %}"><i class="fas fa-trash-alt"></i> Remove post</a></li>
+                                    <form onsubmit="deletePost({{forloop.counter}});return false;" method="POST">
+                                        <input type="hidden" value="{{post.id}}" id="remove_post_id{{forloop.counter}}">
+                                        <li><button type="submit" class="dropdown-item drop-danger"><i class="fas fa-trash-alt"></i> Remove post</button></li>
+                                    </form>
                                     <li><a class="dropdown-item drop-primary" href="{% url 'post_settings' post.id %}">Settings</a></li>
                                 {% endif %}
                             </ul>
@@ -45,9 +49,9 @@
                             </div>
                             <div class="down-like-comment">                    
                                 <hr>
-                                <form onsubmit="like({{forloop.counter}});return false;var x = true" id="likeForm{{forloop.counter}}">
+                                <form onsubmit="like({{forloop.counter}});return false;" id="likeForm{{forloop.counter}}">
                                     {% csrf_token %}
-                                    <input type="hidden" value="{{ post.id }}" name="post_id">
+                                    <input type="hidden" value="{{ post.id }}" id="post_id{{forloop.counter}}">
                                     <button type="submit" class="btn full-btn like {% for likes in post.likes.all %}{% if request.user == likes.user %}active {% endif %}{% endfor %}" name="likebutton" id="likeContainer{{forloop.counter}}"><i class="fas fa-thumbs-up" id="likeIcon{{forloop.counter}}"></i> <span>Like</span></button>
                                     <a onclick="focusComment({{forloop.counter}})" id="commentContainer{{forloop.counter}}" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
                                 </form>
@@ -55,13 +59,16 @@
                                     {% for likes in post.likes.all %}
                                         {% if request.user == likes.user %}
                                             $(document).ready(function(){
-                                                alreadyLiked({{forloop.counter}})
-                                                changeLikeCount(id={{forloop.counter}}, status="me")
+                                                alreadyLiked({{forloop.parentloop.counter}}, status="unlike")
+                                                changeLikeCount(id={{forloop.parentloop.counter}}, status="me")
                                             })
                                         {% endif %}
                                     {% endfor %}
                                 </script>
                                 <hr>
+                            </div>
+
+                            <div id="newComment{{forloop.counter}}">
                             </div>
 
                             {% for comment in comments %}
@@ -78,20 +85,54 @@
                                                 <h5>{{ comment.author.get_full_name }}</h5>
                                             </a>
                                             <p class="post-content">{{ comment.content }}</p>
+                                            
+                                            <div class="badge comment-like-count" id="commentLikeCountBadge{{forloop.counter}}"><i class="fas fa-thumbs-up"></i> <span id="commentLikeCount{{forloop.counter}}">{{ comment.likes.count }}</span></div>
+                                            
+                                            <div class="badge like-list" id="like-list{{forloop.counter}}">
+                                                <ul id="like-list-ul{{forloop.counter}}">
+                                                    {% for user in comment.likes.all %}
+                                                        <li>{{user.get_full_name}}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+
+                                            <script>
+                                                $(document).ready(function(){
+                                                    likeCommentList({{forloop.counter}}, "", '{{request.user.get_full_name}}')
+                                                })
+                                            </script>
+                                            <script>
+                                                {% if request.user in comment.likes.all %}
+                                                        $(document).ready(function(){
+                                                            alreadyCommentLiked({{forloop.counter}}, "unlike", '{{request.user.get_full_name}}')
+                                                        })
+                                                {% endif %}
+                                            </script>
+                                            <form method="POST" onsubmit="likeComment({{forloop.counter}}, '{{request.user.get_full_name}}');return false" id="likeCommentForm{{forloop.counter}}" class="commentLike">
+                                                {% csrf_token %}
+                                                <input type="hidden" value="{{comment.id}}" id="comment_id{{forloop.counter}}">
+                                                <button type="submit"><span id="likeCommentIcon{{forloop.counter}}">Like</span><span style="color: white !important"> · Reply </span><span>· {{comment.date_posted|date:"M j. H:i"}}</span></button>
+                                            </form>
+                                            <div class="sub-comment">
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                 {% endif %}
 
                             {% endfor %}
 
+                            <div id="newComment{{forloop.counter}}">
+                            </div>
+
                             {% if request.user.is_authenticated %}
-                                <form action="" method="POST" id="comment">
+                                <form method="POST" id="comment" onsubmit="addComment({{forloop.counter}}, '{{request.user.profile.image}}', '{{request.user.get_full_name}}');return false;">
                                     <div class="post-wrapper">
                                         {% csrf_token %}
                                         <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
                                         <div class="input-container">
-                                            <input type="hidden" value="{{ post.id }}" name="post_id">
-                                            <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
+                                            <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
+                                            <textarea type="text" name="content" id="content{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
                                             <button type="submit" class="btn full-btn" name="commentbutton"><i class="fas fa-paper-plane"></i></button>
                                         </div>
                                     </div>
