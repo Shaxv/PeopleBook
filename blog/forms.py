@@ -16,6 +16,31 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'birth_date', 'country', 'gender', 'image', 'password1', 'password2']
 
+class Register1Form(forms.ModelForm):
+    email = forms.EmailField(label="Email address")
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name']
+
+class Register2Form(forms.ModelForm):
+    country = forms.ChoiceField(choices=Profile.COUNTRY_CHOICES)
+    gender = forms.ChoiceField(choices=Profile.GENDER_CHOICES)
+    birth_date = forms.DateField(help_text="Format: YYYY-MM-DD")
+    image = forms.ImageField(label="Profile picture", widget=forms.FileInput)
+
+    class Meta:
+        model = Profile
+        fields = ['country', 'gender', 'birth_date', 'image']
+    
+class Register3Form(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
+
+
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=150)
     password = forms.PasswordInput()

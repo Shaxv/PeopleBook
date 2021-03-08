@@ -5,70 +5,116 @@
 
 {% block head %}
         <link rel="stylesheet" href="{% static 'css/form.css' %}" type="text/css">
+        <script src="{% static 'js/register.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/register.css' %}">
 {% endblock %}
 
 {% block content %}
 
-    <div class="login-wrapper">
-        <div class="form-wrapper">
-            <h1>Register</h1>
-            <hr>
-            <form action="" method="POST" enctype="multipart/form-data">
+    {% if index == "1" %}
+
+        <form action="" method="POST">
 
             {% csrf_token %}
 
-            {% for field in form %}
-                {{ field.label }}
-                <div class="input-container">
-                    {{ field|add_class:"input" }}
-                    {% if field.label == 'Profile picture' %}
-                        <button type="button" id="getImg" class="btn btn-primary">Grab an image from here</button>
-                        <script>
-                            document.getElementById('id_image').onchange = function(){
-                                document.getElementById("getImg").innerHTML = document.getElementById("id_image").value.split("\\").pop()
-                            };
+            <div class="login-wrapper" id="form1">
+                <div class="form-wrapper">
+                    <h1>Account Information</h1>
+                    <hr>
 
-                            document.getElementById('getImg').onclick = function(){
-                                document.getElementById('id_image').click();
-                            };
-                        </script>
-                    {% endif %}
-                    <div class="icon-wrapper">
-                        <i class="
-                            {% if field.label == 'Username' or field.label == 'First name' or field.label == 'Last name' %}
-                                fas fa-user
-                            {% elif field.label == 'Email address' %}
-                                fas fa-envelope
-                            {% elif field.label == 'Birth date' %}
-                                far fa-calendar-alt
-                            {% elif field.label == 'Country' %}
-                                fas fa-globe-europe
-                            {% elif field.label == 'Gender' %}
-                                fas fa-venus-mars
-                            {% elif field.label == 'Profile picture' %}
-                                far fa-image
-                            {% elif field.label == 'Password' or field.label == 'Password confirmation' %}
-                                fas fa-key
-                            {% endif %}
-                        "></i>
-                    </div>
+                    {% for field in form1 %}
+                        {{field.label}}
+                        <div class="input-container">
+                            {{ field|add_class:"input" }}
+                            <div class="icon-wrapper">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <button class="nextForm" id="form1Button"><i class="fas fa-arrow-right"></i></button>
+
                 </div>
-                {% if field.errors %}
-                    <div class="alert alert-danger custom-alert">
-                        {{ field.errors }} 
-                        {% if field.help_text %}
-                        <ul class="errorlist">
-                            <li>{{ field.help_text }}</li>
-                        </ul>
-                        {% endif %}
+            </div>
+
+        {% endif %}
+
+        {% if index == "2" %}
+
+            <div class="login-wrapper" id="form2">
+                <div class="form-wrapper">
+                    <h1>Personal Information</h1>
+                    <hr>
+
+                    {% for field in form2 %}
+                        {{field.label}}
+                        <div class="input-container">
+                            {{ field|add_class:"input" }}
+                                {% if field.label == 'Profile picture' %}
+                                    <button type="button" id="getImg" class="btn btn-primary">Grab an image from here</button>
+                                    <script>
+                                        document.getElementById('id_image').onchange = function(){
+                                            document.getElementById("getImg").innerHTML = document.getElementById("id_image").value.split("\\").pop()
+                                        };
+
+                                        document.getElementById('getImg').onclick = function(){
+                                            document.getElementById('id_image').click();
+                                        };
+                                </script>
+                            {% endif %}
+                            <div class="icon-wrapper">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {{ field.help_text }}
+                        </div>
+                    {% endfor %}
+
+                    <button class="nextForm" id="form2Button"><i class="fas fa-arrow-right"></i></button>
+
+                </div>
+            </div>
+
+        {% endif %}
+
+        {% if index == "3" %}
+
+        <div class="login-wrapper" id="form3">
+            <div class="form-wrapper">
+                <h1>Secure Information</h1>
+                <hr>
+
+                {% for field in form3 %}
+                    {{field.label}}
+                    <div class="input-container">
+                        {{ field|add_class:"input" }}
+                        <div class="icon-wrapper">
+                            <i class="fas fa-user"></i>
+                        </div>
                     </div>
-                {% endif %}
-            {% endfor %}
-                <div class="bottom">
-                    <button type="submit" name="submit" class="btn btn-primary">Sign up</button>
-                    <a href="{% url 'login' %}" style="font-size: 18px;"><u><i>Already have an account?</i></u></a>      
-                </div>                  
-            </form>
+                {% endfor %}
+
+                <button class="nextForm" id="form3Button"><i class="fas fa-arrow-right"></i></button>
+
+            </div>
         </div>
-    </div>
+
+        {% endif %}
+
+    </form>
+
+
+    <!--
+                            {% if field.errors %}
+                            <div class="alert alert-danger custom-alert">
+                                {{ field.errors }} 
+                                {% if field.help_text %}
+                                <ul class="errorlist">
+                                    <li>{{ field.help_text }}</li>
+                                </ul>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+    -->
+
+
 {% endblock %}

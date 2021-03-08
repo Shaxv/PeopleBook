@@ -109,13 +109,39 @@ def Login(request):
         }
         return render(request, "blog/login.html", context)
 
-def Register(request):
+def Register(request, index):
 
     if request.user.is_authenticated:
         messages.error(request, "You are logged in!")
         return redirect("profile", request.user.id)
-
+    
     else:
+
+        if index == 1:
+            context = {
+                "index": "1",
+            }
+
+        elif index == 2:
+            context = {
+                "index": "2",
+            }
+
+        elif index == 3:
+            context = {
+                "index": "3",
+            }
+
+        else:
+            context = {
+                "index": "4",
+            }
+
+        context["title"] = "Register"
+        return render(request, "blog/register.html", context)
+
+
+    """else:
 
         if request.method == 'POST':
             form = RegisterForm(request.POST, request.FILES)
@@ -137,9 +163,12 @@ def Register(request):
 
         context = {
             'form': form,
+            'form1': Register1Form,
+            'form2': Register2Form,
+            'form3': Register3Form,
             'title': 'Register',
         }
-        return render(request, "blog/register.html", context)
+        return render(request, "blog/register.html", context)"""
 
 
 #

@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import django_heroku
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -113,3 +114,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_URL = "/login/"
 
 AUTH_PROFILE_MODULE = 'blog.Profile'
+
+# Activate Django-Heroku
+django_heroku.settings(locals())
