@@ -2,3 +2,4 @@ django
 django_heroku
 gunicorn
 django-widget-tweaks
+pillow
