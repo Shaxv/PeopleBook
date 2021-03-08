@@ -1,3 +1,4 @@
 django
 django_heroku
 gunicorn
+widget_tweaks
