@@ -15,9 +15,9 @@
 }
 
 body{
-    background: rgb(235, 235, 235);
     color: white;
     font-family: 'Quicksand', sans-serif;
+    box-sizing: border-box;
 }
 
 /* */
@@ -52,7 +52,7 @@ body{
 .flex-row .dropdown .nav-item .nav-link:hover{
     color: #C7C8C9;
 }
-.d-none{
+.d-md-flex{
     margin-left: 150px;
     text-align: center;
 }

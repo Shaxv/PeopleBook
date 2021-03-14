@@ -11,8 +11,8 @@
 
     <div class="container">
         <div id="proba"></div>
-        <div class="row">
-            <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-9">
                 {% for post in posts %}
                     <div class="card posts" id="post{{forloop.counter}}">
                         <div class="card-header">
@@ -142,28 +142,6 @@
                         </div>
                     </div>
                 {% endfor %}
-            </div>
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title" style="margin-bottom: 0;">Users</div>
-                        <div class="card-sub-title" style="color: gray; font-size: 19px">{{ user_count }} user</div>
-                    </div>
-                    <div class="card-body text-center">
-                        <div class="row">
-                            {% for user in users %}
-                                <div class="col-4">
-                                    <div class="friend-card">
-                                        <a href="profile/{{ user.id }}">
-                                            <img src="/{{ user.profile.image }}" alt="User{{forloop.counter}}" class="friend-img">
-                                            <h5 class="friend-title">{{ user.get_full_name }}</h5>
-                                        </a>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

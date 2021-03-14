@@ -18,18 +18,12 @@
 
     <!-- Center elements -->
 
-    <ul class="navbar-nav flex-row d-none d-md-flex">
+    <ul class="navbar-nav flex-row d-md-flex">
       <li class="nav-item me-3 me-lg-1">
       </li>
         <li class="nav-item me-3 me-lg-1">
           <a class="nav-link" href="{% url 'home' %}" title="Home">
             <span><i class="fas fa-home fa-lg"></i></span>
-          </a>
-        </li>
-
-        <li class="nav-item me-3 me-lg-1">
-          <a class="nav-link" href="{% url 'posts' %}" title="Posts">
-            <span><i class="fas fa-flag fa-lg"></i></span>
           </a>
         </li>
 
@@ -80,7 +74,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="notUserDropMenu">
                     <li><a class="dropdown-item drop-primary" href="{% url 'login' %}">Login</a></li>
-                    <li><a class="dropdown-item drop-primary  " href="{% url 'register' 1 %}">Register</a></li>
+                    <li><a class="dropdown-item drop-primary  " href="{% url 'register' %}">Register</a></li>
                 </ul>
             </li>
         </div>

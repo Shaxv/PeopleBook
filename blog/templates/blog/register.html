@@ -5,103 +5,133 @@
 
 {% block head %}
         <link rel="stylesheet" href="{% static 'css/form.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/authentication.css' %}">
         <script src="{% static 'js/register.js' %}"></script>
-        <link rel="stylesheet" href="{% static 'css/register.css' %}">
 {% endblock %}
 
 {% block content %}
 
-    {% if index == "1" %}
+    <div class="form-wrapper">
+        <div class="row">
+            <div class="col-md-7 col-sm-12 order-md-last">
+                <div class="left-section">
+                    <div class="meter">
+                        <span class="nemtom1"><i id="nemtom"></i></span>
+                        <h4 id="title">Account</h4>
+                    </div>
 
-        <form action="" method="POST">
+                    <div id="form1">
+                        <form action="" method="POST" onsubmit="Form1Submit();return false;"> 
+                            {% csrf_token %}
+                            {% for field in form1 %}
+                                {{ field.label }}
+                                <div class="input-container">
+                                    {{ field|add_class:"input" }}
+                                    <div class="icon-wrapper">
+                                        <i class="{% if field.label == "Email address" %}fas fa-envelope{% else %}fas fa-user{% endif %}"></i>
+                                    </div>
+                                </div>
+                                {% if field.label == "Email address" %}
+                                    <div id="email_error"></div>
+                                {% endif %}
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary" id="form1Button">Next <i class="fas fa-arrow-right"></i></button>
+                        </form>
+                    </div>
 
-            {% csrf_token %}
+                    <div id="form2">
+                        <form action="" method="POST" onsubmit="Form2Submit();return false;" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% for field in form2 %}
+                                {{ field.label }}
+                                <div class="input-container">
+                                    {{ field|add_class:"input" }}
+                                        {% if field.label == 'Profile picture' %}
+                                            <button type="button" id="getImg" class="btn btn-primary">Click here to upload an image</button>
+                                            <script>
+                                                var id_image = document.getElementById("id_image")
+                                                var getImg = document.getElementById("getImg")
 
-            <div class="login-wrapper" id="form1">
-                <div class="form-wrapper">
-                    <h1>Account Information</h1>
-                    <hr>
+                                                id_image.onchange = function(){
+                                                    if (id_image.value == ""){
+                                                        getImg.innerHTML = "Click here to upload an image"
+                                                    }
+                                                    else{
+                                                        getImg.innerHTML = id_image.value.split("\\").pop()
+                                                    }
+                                                };
 
-                    {% for field in form1 %}
-                        {{field.label}}
-                        <div class="input-container">
-                            {{ field|add_class:"input" }}
-                            <div class="icon-wrapper">
-                                <i class="fas fa-user"></i>
-                            </div>
-                        </div>
-                    {% endfor %}
+                                                getImg.onclick = function(){
+                                                    id_image.click();
+                                                };
+                                            </script>
+                                        {% endif %}
+                                    <div class="icon-wrapper">
+                                        <i class="{% if field.label == "Email address" %}fas fa-envelope{% else %}fas fa-user{% endif %}"></i>
+                                    </div>
+                                </div>
+                                {% if field.label == "Profile picture" %}
+                                    <div id="image_error"></div>
+                                {% elif field.label == "Birth date" %}
+                                    <div id="birth_date_error"></div>
+                                {% endif %}
+                            {% endfor %}
+                            <button type="button" class="btn btn-danger nextForm" id="form2BackButton" onclick="backToForm1()"><i class="fas fa-arrow-left"></i> Back</button>
+                            <button type="submit" class="btn btn-primary nextForm" id="form2Button">Next <i class="fas fa-arrow-right"></i></button>
+                        </form>
+                    </div>
 
-                    <button class="nextForm" id="form1Button"><i class="fas fa-arrow-right"></i></button>
+                    <div id="form3">
+                        <form action="" method="POST" onsubmit="Form3Submit();return false;">
+                            {% csrf_token %}
+                            {% for field in form3 %}
+                                {{ field.label }}
+                                <div class="input-container">
+                                    {{ field|add_class:"input" }}
+                                    <div class="icon-wrapper">
+                                        <i class="{% if field.label == "Password" or field.label == "Password confirmation" %}fas fa-key{% else %}fas fa-user{% endif %}"></i>
+                                    </div>
+                                </div>
+                                {% if field.label == "Password" %}
+                                    <div id="pwd_error"></div>
+                                {% elif field.label == "Password confirmation" %}
+                                    <div id="pwd_comf_error"></div>
+                                {% elif field.label == "Username" %}
+                                    <div id="uid_error"></div>
+                                {% endif %}
+                            {% endfor %}
+                            <button type="submit" class="btn btn-danger nextForm" id="form3BackButton" onclick="backToForm2()"><i class="fas fa-arrow-left"></i> Back</button>
+                            <button type="submit" class="btn btn-primary nextForm" id="form3Button">Next <i class="fas fa-arrow-right"></i></button>
+                        </form>
+                    </div>
 
                 </div>
             </div>
-
-        {% endif %}
-
-        {% if index == "2" %}
-
-            <div class="login-wrapper" id="form2">
-                <div class="form-wrapper">
-                    <h1>Personal Information</h1>
-                    <hr>
-
-                    {% for field in form2 %}
-                        {{field.label}}
-                        <div class="input-container">
-                            {{ field|add_class:"input" }}
-                                {% if field.label == 'Profile picture' %}
-                                    <button type="button" id="getImg" class="btn btn-primary">Grab an image from here</button>
-                                    <script>
-                                        document.getElementById('id_image').onchange = function(){
-                                            document.getElementById("getImg").innerHTML = document.getElementById("id_image").value.split("\\").pop()
-                                        };
-
-                                        document.getElementById('getImg').onclick = function(){
-                                            document.getElementById('id_image').click();
-                                        };
-                                </script>
-                            {% endif %}
-                            <div class="icon-wrapper">
-                                <i class="fas fa-user"></i>
+            <div class="col-md-5 col-sm-12 order-md-first">
+                <div class="right-section">
+                    <h1>Create a PeopleBook account</h1>
+                    <span class="first">First, let's setup your account, then you will get full access to our services.</span>
+                    <div class="or-register">
+                        <span>Simply register with</span>
+                        <div class="row">
+                            <!--<div class="col-6">
+                                <a href="" class="btn full-btn insta-btn"><img src="{% static 'pics/instagram.png' %}" height="35px"></a>
+                            </div>-->
+                            <div class="col-12">
+                                <a href="" class="btn full-btn googl-btn"><img src="{% static 'pics/google.png' %}" height="35px"></a>              
                             </div>
-                            {{ field.help_text }}
-                        </div>
-                    {% endfor %}
-
-                    <button class="nextForm" id="form2Button"><i class="fas fa-arrow-right"></i></button>
-
-                </div>
-            </div>
-
-        {% endif %}
-
-        {% if index == "3" %}
-
-        <div class="login-wrapper" id="form3">
-            <div class="form-wrapper">
-                <h1>Secure Information</h1>
-                <hr>
-
-                {% for field in form3 %}
-                    {{field.label}}
-                    <div class="input-container">
-                        {{ field|add_class:"input" }}
-                        <div class="icon-wrapper">
-                            <i class="fas fa-user"></i>
+                            <div class="col-12">
+                                <a href="" class="btn full-btn aapl-btn"><img src="{% static 'pics/apple.png' %}" height="35px"></a>
+                            </div>
                         </div>
                     </div>
-                {% endfor %}
-
-                <button class="nextForm" id="form3Button"><i class="fas fa-arrow-right"></i></button>
-
+                    <div class="right-section-bottom">
+                        <span>Already have an account? <a href="{% url 'login' %}">Click here.</a></span>
+                    </div>
+                </div>
             </div>
         </div>
-
-        {% endif %}
-
-    </form>
-
+    </div>
 
     <!--
                             {% if field.errors %}
@@ -115,6 +145,5 @@
                             </div>
                         {% endif %}
     -->
-
 
 {% endblock %}

@@ -8003,7 +8003,7 @@ textarea.form-control-lg {
     text-align: center !important;
   }
 }
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .float-md-start {
     float: left !important;
   }

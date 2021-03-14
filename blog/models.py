@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import json
 
+
 class Profile(models.Model):
     GENDER_CHOICES = (
         ('Male', "Male"),
@@ -19,7 +20,7 @@ class Profile(models.Model):
     birth_date = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=50, choices=GENDER_CHOICES, blank=True, null=True)
     country = models.CharField(max_length=50, choices=COUNTRY_CHOICES, blank=True, null=True)
-    image = models.ImageField(upload_to="static/pics/profile_pics/", blank=True)
+    image = models.ImageField(upload_to="static/pics/profile_pics/", blank=True, null=True)
     background = models.ImageField(upload_to="static/pics/bg_pics/", blank=True)
 
     def __str__(self):
@@ -33,6 +34,7 @@ class Friend(models.Model):
     def __str__(self):
         return f"{self.user} and {self.friend}"
 
+
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
@@ -40,7 +42,8 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.author}'s. {self.date_posted}"
-    
+
+
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments", default=None)
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
@@ -53,6 +56,7 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["-date_posted"]
+
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes", default=None)

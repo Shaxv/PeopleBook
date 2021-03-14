@@ -167,7 +167,7 @@ const newPost = () =>{
     const fd = new FormData()
     fd.append('csrfmiddlewaretoken', csrf[0].value)
     fd.append('content', content[0].value)
-    fd.append('newPost', 'newPost')
+    fd.append('new_post', 'new_post')
 
     $.ajax({
         type: 'POST',
@@ -378,7 +378,6 @@ const addComment = (id, image, name) =>{
     const content = document.getElementById("content" + id)
 
     const fd = new FormData
-    fd.append('csrfmiddlewaretoken', csrf[id].value)
     fd.append('comment_post_id', comment_post_id.value)
     fd.append('content', content.value)
     fd.append('add_comment', 'add_comment')

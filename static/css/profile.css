@@ -1,202 +1,208 @@
-main{
-    margin-top: 0 !important;
+main {
+  margin-top: 0 !important;
 }
 
-header{
-    background: var(--gray-2);
+header {
+  background: var(--gray-2);
 }
 
-.profile-img{
-    opacity: 0.9;
-    height: 350px;
-    margin-bottom: 20px !important;    
+.profile-img {
+  opacity: 0.9;
+  height: 350px;
+  margin-bottom: 20px !important;
 }
-.profile-img a{
-    transition: all .2s;
+.profile-img a {
+  transition: all 0.2s;
 }
-.card-img{
-    height: 350px;
-    border-radius: 24px;
+.card-img {
+  height: 350px;
+  border-radius: 24px;
 }
-.profile-img img{
-    position: absolute;
+.profile-img img {
+  position: absolute;
 }
-.img{
-    left: 0;
-    right: 0;
-    bottom: -10px;
+.img {
+  height: 120px;
+  width: 120px;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  margin: 0 auto;
+  border: 2px solid white;
+}
+header .container h2 {
+  text-align: center;
+}
+header .container h5 {
+  color: gray;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.profile-img a:hover {
+  opacity: 0.75;
+}
+.input {
+  color: white !important;
+}
+.friend-img:hover {
+  opacity: 0.8;
+}
+#id_bio {
+  padding-top: 8px;
+  min-height: 100px;
+  max-height: 500px;
+}
+.back {
+  position: fixed;
+  background: var(--primary-color);
+  border-radius: var(--border-radius);
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  transition: 0.2s;
+}
+.back h5 {
+  padding: 8px 14px 2px;
+  font-size: 16px;
+  color: white;
+}
+.back a {
+  text-decoration: none;
+}
+.back i {
+  padding-left: 6px;
+}
+.back:hover {
+  opacity: 0.9;
+}
+header .container hr {
+  width: 90%;
+  margin: 10px auto;
+  height: 2px;
+}
+header .links {
+  width: 95%;
+  text-align: right;
+}
+header .links .full-btn {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+#removeFriend .btn:hover {
+  background: transparent;
+}
+
+/**/
+/**/
+/**/
+
+#mind .input-container {
+  margin-bottom: 10px;
+}
+#mind .input {
+  min-height: 70px;
+  max-height: 160px;
+  padding-top: 10px;
+  padding-left: 14px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  width: 88%;
+  float: right;
+  overflow: auto;
+}
+#mind .input:focus {
+  margin-top: 0;
+}
+#mind img {
+  position: absolute;
+  border-radius: 10px;
+  left: 5px;
+}
+#mind .input-container .full-btn {
+  display: block;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  margin-top: 0;
+  padding: 9px 13px;
+  color: white;
+  border-radius: var(--border-radius);
+}
+#mind .input-container .full-btn i {
+  margin-right: 0;
+}
+#mind .input-container .full-btn:hover {
+  background-color: #585858b6;
+}
+#mind .input-container .full-btn:focus {
+  background-color: #636161b6;
+}
+
+#mind .sub-inputs hr {
+  margin: 0 auto;
+  width: 98%;
+  background: transparent;
+  border-bottom: 2px solid gray;
+  padding-top: 20px;
+}
+
+#image,
+#video,
+#file {
+  display: none;
+}
+#getImage,
+#getVideo,
+#getFile {
+  margin: 0 auto;
+  margin-top: 14px;
+  text-align: center;
+  width: 32.85%;
+}
+#getImage i,
+#getVideo i,
+#getFile i {
+  font-size: 26px;
+  margin-right: 6px;
+}
+#getImage i {
+  color: var(--success-color);
+}
+#getVideo i {
+  color: violet;
+}
+#getFile i {
+  color: var(--primary-color);
+}
+
+/**/
+/**/
+/**/
+
+/**/
+/**/
+/**/
+
+@media only screen and (max-width: 1400px) {
+  .friend-card {
     margin: 0 auto;
-    border: 2px solid white;
+    text-align: left;
+  }
+  .friend-card a img {
+    width: 130px;
+  }
 }
-header .container h2{
-    text-align: center;
+@media only screen and (max-width: 992px) {
+  .friend-card {
+    margin: unset;
+  }
 }
-header .container h5{
-    color: gray;
-    text-align: center;
-    margin-bottom: 16px;
-}
-.profile-img a:hover{
-    opacity: .75;
-}
-.input{
-    color: white !important;
-}
-.friend-img:hover{
-    opacity: .8;
-}
-#id_bio{
-    padding-top: 8px;
-    min-height: 100px;
-    max-height: 500px;
-}
-.back{
-    position: fixed;
-    background: var(--primary-color);
-    border-radius: var(--border-radius);
-    bottom: 20px;
-    left: 20px;
-    z-index: 1000;
-    transition: .2s;
-}
-.back h5{
-    padding: 8px 14px 2px;
-    font-size: 16px;
-    color: white;
-}
-.back a{
-    text-decoration: none;
-}
-.back i{
-    padding-left: 6px;
-}
-.back:hover{
-    opacity: .9;
-}
-header .container hr{
-    width: 90%;
-    margin: 10px auto;
-    height: 2px;
-}
-header .links{
-    width: 95%;
-    text-align: right;
-}
-header .links .full-btn{
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-#removeFriend .btn:hover{
-    background: transparent;
-}
-
-/**/
-/**/
-/**/
-
-#mind .input-container{
-    margin-bottom: 10px;
-}
-#mind .input{
-    min-height: 70px;
-    max-height: 160px;
-    padding-top: 10px;
-    padding-left: 14px;
-    padding-bottom: 10px;
-    border-radius: 10px;
-    width: 88%;
-    float: right;
-    overflow: auto;
-}
-#mind .input:focus{
-    margin-top: 0;
-}
-#mind img{
-    position: absolute;
-    border-radius: 10px;
-    left: 5px;
-}
-#mind .input-container .full-btn{
-    display: block;
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    margin-top: 0;
-    padding: 9px 13px;
-    color: white;
-    border-radius: var(--border-radius);
-}
-#mind .input-container .full-btn i{
-    margin-right: 0;
-}
-#mind .input-container .full-btn:hover{
-    background-color: #585858b6;
-}
-#mind .input-container .full-btn:focus{
-    background-color: #636161b6;
-}
-
-
-#mind .sub-inputs hr{
-    margin: 0 auto;
-    width: 98%;
-    background: transparent;
-    border-bottom: 2px solid gray;
-    padding-top: 20px;
-}
-
-#image, #video, #file{
-    display: none;
-}
-#getImage, #getVideo, #getFile{
-    margin: 0 auto;
-    margin-top: 14px;
-    text-align: center;
-    width: 32.85%;
-}
-#getImage i, #getVideo i, #getFile i{
-    font-size: 26px;
-    margin-right: 6px;
-}
-#getImage i{
-    color: var(--success-color);
-}
-#getVideo i{
-    color: violet;
-}
-#getFile i{
-    color: var(--primary-color);
-}
-
-/**/
-/**/
-/**/
-
-
-/**/
-/**/
-/**/
-
-@media only screen and (max-width: 1400px){
-    .friend-card{
-        margin: 0 auto;
-        text-align: left;
-    }
-    .friend-card a img{
-        width: 130px;
-    }
-}
-@media only screen and (max-width: 992px){
-    .friend-card{
-        margin: unset;   
-    }
-}
-@media only screen and (max-width: 767px){
-    .friend-card{
-        margin: unset;
-        text-align: unset;
-    }
-    .friend-card a img{
-        width: unset;
-    }
+@media only screen and (max-width: 767px) {
+  .friend-card {
+    margin: unset;
+    text-align: unset;
+  }
+  .friend-card a img {
+    width: unset;
+  }
 }
