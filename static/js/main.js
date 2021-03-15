@@ -201,6 +201,7 @@ const deletePost = (id) =>{
         url: '',
         data: fd,
         success: function(response){
+            handleAlerts("success", "Successfully Removed a post!")
             postHandler('remove', "", id)
         },
         error: function(error){

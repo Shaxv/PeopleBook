@@ -15,8 +15,7 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email',
-                  'birth_date', 'country', 'gender', 'image', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'birth_date', 'country', 'gender', 'image', 'password1', 'password2']
 
 
 class Register1Form(forms.ModelForm):
@@ -93,8 +92,7 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio', 'gender', 'birth_date',
-                  'country', 'image', 'background']
+        fields = ['bio', 'gender', 'birth_date', 'country', 'image', 'background']
 
 
 class UpdatePost(forms.ModelForm):

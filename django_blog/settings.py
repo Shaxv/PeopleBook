@@ -9,7 +9,7 @@ SECRET_KEY = '@k=t-+w)1iyl%)5#a+j4o^&c!#f(educ_hdfkkt1ynu!&f24fk'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.herokuapp.com', '0.0.0.0:5000']
 
 
 # Application definition
@@ -17,6 +17,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'widget_tweaks',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -117,3 +118,24 @@ AUTH_PROFILE_MODULE = 'blog.Profile'
 
 # Activate Django-Heroku
 django_heroku.settings(locals())
+
+ASGI_APPLICATION = "django_blog.routing.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis::/localhost:6379')],
+        },
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        }
+    }
+}

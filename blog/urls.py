@@ -10,4 +10,6 @@ urlpatterns = [
     path('profile/settings', views.Profile_settings, name="profile_settings"),
     path('logout/', views.Logout, name='logout'),
     path('posts/settings/<int:id>', views.Post_settings, name='post_settings'),
+    path('chat/<str:room_name>/', views.Room_view, name='chat_room'),
+    path('chat/', views.Chat_view, name='chat'),
 ]

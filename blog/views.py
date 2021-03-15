@@ -467,3 +467,21 @@ def Friends_view(request):
         'user_count': user_count,
     }
     return render(request, "blog/friends.html", context)
+
+#
+# CHAT
+#
+
+@login_required
+def Room_view(request, room_name):
+    context = {
+        'room_name': room_name,
+    }
+    return render(request, "blog/chat_room.html", context)
+
+@login_required
+def Chat_view(request):
+    context = {
+
+    }
+    return render(request, "blog/chat.html", context)
