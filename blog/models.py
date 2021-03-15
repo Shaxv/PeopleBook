@@ -64,3 +64,13 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user} liked {self.post}"
+
+
+
+class Room(models.Model):
+    users = models.ManyToManyField(User, default=None)
+    title = models.CharField(max_length=250, default=None)
+    limit = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.title

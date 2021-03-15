@@ -474,14 +474,57 @@ def Friends_view(request):
 
 @login_required
 def Room_view(request, room_name):
-    context = {
-        'room_name': room_name,
-    }
-    return render(request, "blog/chat_room.html", context)
+    room = Room.objects.get(title=room_name)
+
+    if request.method != "POST":
+        if room:
+            if request.user in room.users.all():
+                context = {
+                    'room_name': room_name,
+                }
+                return render(request, "blog/chat_room.html", context)
+            else:
+                messages.error(request, "You aren't to the joined to the room!")
+                return redirect(Chat_view)
+
+        else:
+            messages.error(request, "There are no such room!")
+            return redirect(Chat_view)
+    else:
+        room.users.add(request.user.id)
+        context = {
+            'room_name': room_name,
+        }
+        return render(request, "blog/chat_room.html", context)
 
 @login_required
 def Chat_view(request):
-    context = {
+    context = {}
+    if request.method == "POST":
+        if "create_room" in request.POST:
+            room = Room(title=request.POST["title"], limit=request.POST["limit"])
+            room.save()
+            room.users.add(request.user.id)
 
+        elif "leave_room" in request.POST:
+            room = Room.objects.get(id=request.POST["room_id"])
+            room.users.remove(request.user.id)
+
+            if room.users.all == "":
+                room.remove()
+        
+        elif "enter_room" in request.POST:
+            room = Room.objects.get(id=request.POST["room_id"])
+            room.users.add(request.user.id)
+    
+    else:
+        pass
+
+    rooms = Room.objects.all().order_by("title") 
+
+    context = {
+        "title": "Chat Rooms",
+        "rooms": rooms,
     }
+
     return render(request, "blog/chat.html", context)

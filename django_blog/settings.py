@@ -121,6 +121,16 @@ django_heroku.settings(locals())
 
 ASGI_APPLICATION = "django_blog.routing.application"
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+
+"""
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -139,3 +149,4 @@ CACHES = {
         }
     }
 }
+"""

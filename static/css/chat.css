@@ -1,0 +1,123 @@
+
+h1{
+    font-size: 34px;
+    font-weight: 600;
+}
+.room-card{
+    border-radius: var(--border-radius);
+    padding: 18px;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    text-align: center;
+}
+.btn i{
+    color: white;
+}
+
+.card-header{
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius);
+}
+.room-pics{
+    padding: 16px;
+    width: 100%;
+    background: var(--light-gray) !important;
+    border-radius: var(--border-radius);
+    border: 2px solid white;
+}
+
+.room-pics img{
+    border: 2px solid white;
+}
+.nemNulla{
+    margin-left: -20px;
+}
+.col-4 .btn, .card-body{
+    width: 100% !important;
+}
+
+.room-create{
+    width: 98%;
+    background: var(--gray-2);
+    border-radius: var(--border-radius);
+    margin-bottom: 40px;
+    padding: 30px 0 50px;
+}
+.room-create .input{
+    padding: 10px;
+}
+.room-create form{
+    margin: 0 auto;
+    width: 90%;
+}
+
+.limit-wrapper{
+    position: relative;
+    width: 70%;
+}
+
+.col-2 p, .limit-wrapper{
+    margin-left: 20px;
+}
+
+.room-create p{
+    margin-bottom: 4px;
+}
+
+.limit-wrapper input{
+    text-align: center;
+}
+.number{
+    color: white !important;
+    padding-left: 22px !important;
+}
+
+.plus{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+.minus{
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+}
+.plus, .minus{
+    background: transparent;
+    border: 1px solid white;
+    border-radius: var(--border-radius);
+    outline: none;
+    transition: all .2s;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+}
+.plus:hover, .minus:hover{
+    background: rgba(0,0,0,0.2);
+}
+.plus:focus, .minus:focus{
+    outline: none;
+}
+
+.createRoom{
+    margin-top: 28px;
+    width: 100%;
+}
+
+.room-card .d-flex button{
+    width: 100% !important;
+}
+
+.leftForm, .rightForm{
+    width: 100% !important;
+}
+.leftForm{
+    margin-right: 6px;
+}
+.rightForm{
+    margin-left: 6px;
+}
