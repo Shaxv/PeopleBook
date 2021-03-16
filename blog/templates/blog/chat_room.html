@@ -1,6 +1,7 @@
 {% extends "blog/base.html" %}
 
 {% load static %}
+{% load custom_template_tags %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/chat.css' %}" type="text/css">
@@ -30,6 +31,14 @@
                                 <a href="{% url 'profile' user.id %}"><img src="/{{ user.profile.image }}" alt="Profile Picture"></a>
                             </div>
                         {% endfor %}
+
+                        {% for user in room.users.all %}
+
+                            {{user}}
+
+                        {% endfor %}
+
+
                     </div>
                 </div>
             </div>
@@ -43,11 +52,11 @@
         const container = document.querySelector("#chat-text")
 
         $(document).ready(function(){
-            container.innerHTML = (`Welcome to ${roomName} Chat Room! <br>`)
+            container.innerHTML = (`Welcome to ${roomName} Chat Room! <br><br>`)
         })
 
         document.querySelector("#sendMsg").onclick = function(e){
-            const message = document.getElementsByName("message")[0]
+            var message = document.getElementsByName("message")[0]
 
             if (message.value == ""){
                 
@@ -86,11 +95,35 @@
         chatSocket.onmessage = function(e){
             const data = JSON.parse(e.data)
 
-            const img = document.createElement("img")
-            img.src = data["image"]
-            container.appendChild(img)
-//<img src="/" alt="Profile Picture" height="100">
-            container.innerHTML += (`<div class="chat-message">${data.message}</div><br>`)
+            if (data["user_id"] == "{{request.user.id}}"){
+                container.innerHTML += 
+                    (`
+                    <div class="d-flex right">
+                        <h1>${data.user_id}</h1>
+                        <div class="chat-message rightBg">
+                            ${data.message}
+                        </div>
+                        <img src="/{{request.user.profile.image}}" height="40" width="40" class="chat-img">
+                        <p>${data.time}</p>
+                    </div>
+                    <br>
+                    `)
+            }
+            else{
+                container.innerHTML +=
+                    (`
+                    <div class="d-flex left">
+                        <h1>${data.user_id}</h1>
+                        <img src="/${data.image}" height="40" width="40" class="chat-img">
+                        <div class="chat-message leftBg">
+                            ${data.message}
+                        </div>
+                    </div>
+                    <p>${data.time}</p>
+                    <br>
+                    `)
+            }
+
             container.scrollTop = container.scrollHeight 
         }
 

@@ -298,12 +298,12 @@ def Profile_view(request, user_id):
 
             if 'imgbutton' in request.POST:
                 if img_form.is_valid():
-                    if os.path.isfile(f"{profile.image}"):
-                        os.remove(profile.image.path)
 
                     if "image" in request.FILES:
                         profile.image = request.FILES["image"]
                         img_form.save()
+                        if os.path.isfile(f"{profile.image}"):
+                            os.remove(profile.image.path)
                         messages.success(request, "Successfully changed image!")
                         return HttpResponseRedirect(request.path_info)
 
@@ -317,12 +317,12 @@ def Profile_view(request, user_id):
 
             elif 'bgbutton' in request.POST:
                 if bg_form.is_valid():
-                    if os.path.isfile(f"{profile.background}"):
-                        os.remove(profile.background.path)
 
                     if "background" in request.FILES:
                         profile.background = request.FILES["background"]
                         bg_form.save()
+                        if os.path.isfile(f"{profile.background}"):
+                            os.remove(profile.background.path)
                         messages.success(request, "Successfully changed background!")
                         return HttpResponseRedirect(request.path_info)
 
@@ -416,15 +416,63 @@ def Profile_view(request, user_id):
 
 @login_required
 def Profile_settings(request):
-    UserForm = UserUpdateForm(instance=request.user)
-    ProfileForm = ProfileUpdateForm(instance=request.user.profile)
+    if request.method == "POST":
+        UserForm = UserUpdateForm(request.POST, instance=request.user)   
+        ProfileForm = ProfileUpdateForm(request.POST, instance=request.user.profile)
 
-    context = {
-        'title': 'Profile Update',
-        'uform': UserForm,
-        'pform': ProfileForm,
-    }
-    return render(request, "blog/settings.html", context)
+        img_form = ProfileImgForm(request.FILES, request.POST, instance=request.user.profile)
+        bg_form = ProfileBgForm(request.FILES, request.POST, instance=request.user.profile)
+        
+        if UserForm.is_valid():
+            UserForm.save()
+        else: 
+            messages.error(request, "Wrong user settings!")
+        
+        if ProfileForm.is_valid():
+            ProfileForm.save()
+        else:
+            messages.error(request, "Wrong profile settings!")
+        
+        if img_form.is_valid():
+
+            if "image" in request.FILES:
+                profile.image = request.FILES["image"]
+                img_form.save()
+                messages.success(request, "Successfully changed image!")
+                if os.path.isfile(f"{request.user.profile.image}"):
+                    os.remove(f"{request.user.profile.image.path}")
+
+        else:
+            messages.error(request, "Error while changing image!")
+
+        if bg_form.is_valid():
+
+            if "background" in request.FILES:
+                profile.background = request.FILES["background"]
+                bg_form.save()
+                messages.success(request, "Successfully changed background!")
+                if os.path.isfile(f"{request.user.profile.background}"):
+                    os.remove(f"{request.user.profile.background.path}")
+
+        else:
+            messages.error(request, "Error while changing background!")
+        
+        return HttpResponseRedirect(request.path_info)
+
+    else:
+        UserForm = UserUpdateForm(instance=request.user)
+        ProfileForm = ProfileUpdateForm(instance=request.user.profile)
+        img_form = ProfileImgForm(instance=request.user.profile)
+        bg_form = ProfileBgForm(instance=request.user.profile)
+
+        context = {
+            'title': 'Profile Update',
+            'uform': UserForm,
+            'pform': ProfileForm,
+            'imgform': img_form,
+            'bgform': bg_form,
+        }
+        return render(request, "blog/settings.html", context)
 
 
 @login_required
@@ -472,6 +520,7 @@ def Friends_view(request):
 # CHAT
 #
 
+
 @login_required
 def Room_view(request, room_name):
     room = Room.objects.get(title=room_name)
@@ -492,6 +541,7 @@ def Room_view(request, room_name):
             messages.error(request, "There are no such room!")
             return redirect(Chat_view)
     else:
+
         room.users.add(request.user.id)
         context = {
             'room': room,

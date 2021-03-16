@@ -178,3 +178,31 @@ h1{
 .member-wrapper .col-4{
     margin: 8px 0
 }
+
+.right{
+    float: right;
+}
+.left{
+    float: left;
+}
+.rightBg{
+    background: var(--primary-color);
+}
+.leftBg{
+    background: var(--gray-1);
+}
+
+.chat-img{
+    border-radius: var(--border-radius);
+}
+.right img{
+    margin-left: 8px;
+}
+.left img{
+    margin-right: 8px;
+}
+.chat-message{
+    border-radius: var(--border-radius);
+    padding: 8px;
+    width: max-content;
+}

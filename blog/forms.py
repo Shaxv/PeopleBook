@@ -92,7 +92,7 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio', 'gender', 'birth_date', 'country', 'image', 'background']
+        fields = ['bio', 'gender', 'birth_date', 'country']
 
 
 class UpdatePost(forms.ModelForm):

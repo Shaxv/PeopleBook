@@ -5,6 +5,13 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <style>
+        #id_image, #id_background{ display: none; }
+        #id_bio{ padding-top: 8px; min-height: 80px; }
+        .form-wrapper h1{ padding: 12px; padding-bottom: 0; }
+        .form-wrapper form{ padding: 10px; }
+        .form-wrapper hr{ margin-bottom: 20px; }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -75,11 +82,59 @@
                     {% endif %}
                 {% endfor %}
                 
+                {{ imgform }}
+                {{ bgform }}
+
+                <div class="input-container">
+                    <button type="button" id="getImg" class="input">Upload a new image</button>
+                    <div class="icon-wrapper">
+                        <i class="fas fa-portrait"></i>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                <button type="button" id="getBg" class="input">Upload a new background</button>
+                    <div class="icon-wrapper">
+                        <i class="fas fa-image"></i>
+                    </div>
+                </div>
+
+                <script>
+                    var id_image = document.getElementById("id_image")
+                    var getImg = document.getElementById("getImg")
+
+                    id_image.onchange = function(){
+                        if (id_image.value == ""){
+                            getImg.innerHTML = "Upload a new image"
+                        }
+                        else{
+                            getImg.innerHTML = id_image.value.split("\\").pop()
+                        }
+                    };
+
+                    getImg.onclick = function(){
+                        id_image.click();
+                    };
+
+                    var id_background = document.getElementById("id_background")
+                    var getBg = document.getElementById("getBg")
+
+                    id_background.onchange = function(){
+                        if (id_background.value == ""){
+                            getBg.innerHTML = "Upload a new image"
+                        }
+                        else{
+                            getBg.innerHTML = id_background.value.split("\\").pop()
+                        }
+                    };
+
+                    getBg.onclick = function(){
+                        id_background.click();
+                    };
+                </script>
+                
                 <button type="submit" name="submit" class="btn btn-primary">Update</button>
             </form>
-            <div class="bottom-links">
-                <a href="{% url 'profile' request.user.id %}" style="font-size: 18px;"><u><i>Already have an account?</i></u></a>                        
-            </div>
         </div>
     </div>
 

@@ -18,6 +18,28 @@ header {
   height: 350px;
   border-radius: 24px;
 }
+@media only screen and (max-width: 500px){
+  .card-img{
+    height: 250px;
+  }
+  .img{
+    bottom: 10px !important;
+  }
+  .profile-img{
+    height: 280px;
+    margin-bottom: 0 !important;
+  }
+  #mind img{
+    margin-top: 10px;
+    height: 60px; 
+    width: 60px;
+  }
+  #mind .input{
+    min-height: 80px !important;
+    width: 75% !important;
+    padding-right: 50px !important;
+  }
+}
 .profile-img img {
   position: absolute;
 }

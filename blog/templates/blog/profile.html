@@ -247,7 +247,7 @@
                             <form onsubmit="newPost();return false;" enctype="multipart/form">
                                 {% csrf_token %}
                                 <div class="input-container">
-                                    <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="70">
+                                    <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="70" width="70">
                                     <textarea type="text" name="content" placeholder="What's on your mind?" class="input"></textarea>
                                     <button type="submit" class="btn full-btn"><i class="fas fa-paper-plane"></i></button>
                                 </div>
@@ -280,7 +280,7 @@
                         <div class="card posts" id="post{{forloop.counter}}">
                             <div class="card-header">
                                 <a href="{% url 'profile' post.author.id %}">
-                                    <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle">
+                                    <img src="/{{ post.author.profile.image }}" height="52" width="52" class="rounded-circle">
                                 </a>
                                 <div class="header-text">
                                     <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
@@ -314,9 +314,15 @@
                                     <hr>
                                     <form onsubmit="like({{forloop.counter}});return false;" id="likeForm{{forloop.counter}}">
                                         {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col">
+                                                <button type="submit" class="btn full-btn like {% for likes in post.likes.all %}{% if request.user == likes.user %}active {% endif %}{% endfor %}" name="likebutton" id="likeContainer{{forloop.counter}}"><i class="fas fa-thumbs-up" id="likeIcon{{forloop.counter}}"></i> <span>Like</span></button>
+                                            </div>
+                                            <div class="col">
+                                                <a onclick="focusComment({{forloop.counter}})" id="commentContainer{{forloop.counter}}" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                            </div>
+                                        </div>
                                         <input type="hidden" value="{{ post.id }}" id="post_id{{forloop.counter}}">
-                                        <button type="submit" class="btn full-btn like {% for likes in post.likes.all %}{% if request.user == likes.user %}active {% endif %}{% endfor %}" name="likebutton" id="likeContainer{{forloop.counter}}"><i class="fas fa-thumbs-up" id="likeIcon{{forloop.counter}}"></i> <span>Like</span></button>
-                                        <a onclick="focusComment({{forloop.counter}})" id="commentContainer{{forloop.counter}}" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
                                     </form>
                                     <script>
                                         {% for likes in post.likes.all %}
@@ -340,7 +346,7 @@
                                         <div class="comment">
                                             <div class="card-header">
                                                 <a href="{% url 'profile' comment.author.id %}">
-                                                    <img src="/{{ comment.author.profile.image }}" height="36">
+                                                    <img src="/{{ comment.author.profile.image }}" height="36" width="36">
                                                 </a>
                                             </div>
                                             <div class="comment-body">
@@ -392,7 +398,7 @@
                                     <form method="POST" id="comment" onsubmit="addComment({{forloop.counter}}, '{{request.user.profile.image}}', '{{request.user.get_full_name}}');return false;">
                                         <div class="post-wrapper">
                                             {% csrf_token %}
-                                            <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
+                                            <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36" width="36">
                                             <div class="input-container">
                                                 <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
                                                 <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
@@ -411,7 +417,7 @@
                             return `<div class="card posts">
                                 <div class="card-header">
                                     <a href="{% url 'profile' request.user.id %}">
-                                        <img src="/{{ request.user.profile.image }}" height="52" class="rounded-circle">
+                                        <img src="/{{ request.user.profile.image }}" height="52" width="52" class="rounded-circle">
                                     </a>
                                     <div class="header-text">
                                         <a href="{% url 'profile' request.user.id %}"><h4>{{ request.user.get_full_name }}</h4></a>
@@ -438,14 +444,20 @@
                                     </div>
                                     <div class="down-like-comment">                    
                                         <hr>
-                                        <a href="" class="btn full-btn like"><i class="fas fa-thumbs-up"></i> Like</a>
-                                        <a href="" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                        <div class="row">
+                                            <div class="col">
+                                                <a href="" class="btn full-btn like"><i class="fas fa-thumbs-up"></i> Like</a>
+                                            </div>
+                                            <div class="col">
+                                                <a href="" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                            </div>
+                                        </div>
                                         <hr>
                                     </div>
                                     <form action="" method="POST" id="comment">
                                         <div class="post-wrapper">
                                             {% csrf_token %}
-                                            <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="36">
+                                            <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="36" width="36">
                                             <div class="input-container">
                                                 <input type="hidden" value="{{ post.id }}" name="post_id">
                                                 <textarea type="text" name="content" placeholder="Write a comment!" class="input"></textarea>
@@ -495,7 +507,7 @@
                         <img src="{% if view_user.profile.background != "" %}/{{ view_user.profile.background }}{% else %}{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
                     </a>
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileImgModal">
-                        <img src="{% if view_user.profile.image != "" %}/{{ view_user.profile.image }}{% else %}{% static 'pics/unknownimg.png' %}{% endif %}" alt="Profile Picture" height="130" class="rounded-circle img card-img">
+                        <img src="{% if view_user.profile.image != "" %}/{{ view_user.profile.image }}{% else %}{% static 'pics/unknownimg.png' %}{% endif %}" alt="Profile Picture" height="130" width="130" class="rounded-circle img card-img">
                     </a>
                 </div>
                 <h2><b>{{ view_user.get_full_name }}</b></h2>
@@ -596,7 +608,7 @@
                         <div class="card posts" id="post{{forloop.counter}}">
                             <div class="card-header">
                                 <a href="{% url 'profile' post.author.id %}">
-                                    <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle">
+                                    <img src="/{{ post.author.profile.image }}" height="52" width="52" class="rounded-circle">
                                 </a>
                                 <div class="header-text">
                                     <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
@@ -622,9 +634,15 @@
                                     <hr>
                                     <form onsubmit="like({{forloop.counter}});return false;" id="likeForm{{forloop.counter}}">
                                         {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col">
+                                                <button type="submit" class="btn full-btn like {% for likes in post.likes.all %}{% if request.user == likes.user %}active {% endif %}{% endfor %}" name="likebutton" id="likeContainer{{forloop.counter}}"><i class="fas fa-thumbs-up" id="likeIcon{{forloop.counter}}"></i> <span>Like</span></button>
+                                            </div>
+                                            <div class="col">
+                                                <a onclick="focusComment({{forloop.counter}})" id="commentContainer{{forloop.counter}}" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                            </div>
+                                        </div>
                                         <input type="hidden" value="{{ post.id }}" id="post_id{{forloop.counter}}">
-                                        <button type="submit" class="btn full-btn like {% for likes in post.likes.all %}{% if request.user == likes.user %}active {% endif %}{% endfor %}" name="likebutton" id="likeContainer{{forloop.counter}}"><i class="fas fa-thumbs-up" id="likeIcon{{forloop.counter}}"></i> <span>Like</span></button>
-                                        <a onclick="focusComment({{forloop.counter}})" id="commentContainer{{forloop.counter}}" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
                                     </form>
                                     <script>
                                         {% for likes in post.likes.all %}
@@ -648,7 +666,7 @@
                                         <div class="comment">
                                             <div class="card-header">
                                                 <a href="{% url 'profile' comment.author.id %}">
-                                                    <img src="/{{ comment.author.profile.image }}" height="36">
+                                                    <img src="/{{ comment.author.profile.image }}" height="36" height="36">
                                                 </a>
                                             </div>
                                             <div class="comment-body">
@@ -700,7 +718,7 @@
                                     <form method="POST" id="comment" onsubmit="addComment({{forloop.counter}}, '{{request.user.profile.image}}', '{{request.user.get_full_name}}');return false;">
                                         <div class="post-wrapper">
                                             {% csrf_token %}
-                                            <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
+                                            <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36" width="36">
                                             <div class="input-container">
                                                 <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
                                                 <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>

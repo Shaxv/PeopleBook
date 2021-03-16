@@ -51,23 +51,24 @@
         <div class="dropdown dropstart btn-group">
             <li class="nav-item me-3 me-lg-1" style="list-style-type: none;">
                 <a class="nav-link d-sm-flex align-items-sm-center dropdown-toggle" role="button" id="userDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src="/{{ request.user.profile.image }}" class="rounded-circle" height="26" alt="ProfilePicture">
+                  <img src="/{{ request.user.profile.image }}" class="rounded-circle" height="26" width="26" alt="ProfilePicture">
                   <strong class="d-none d-sm-block ms-1">{{ request.user.get_full_name }}</strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="userDropMenu" id="dropDown">
-                    <li><a class="dropdown-item drop-primary" href="{% url 'profile' request.user.id %}">Profile</a></li>
-                    <li><a class="dropdown-item drop-primary" href="{% url 'profile_settings' %}">Settings</a></li>
-                    {% if user.is_superuser %}
-                      <li><a class="dropdown-item drop-primary" href="/admin/" target="_blank">Admin panel</a></li>
-                    {% endif %}
-                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item drop-primary" href="{% url 'profile' request.user.id %}"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a class="dropdown-item drop-primary" href="{% url 'profile_settings' %}"><i class="fas fa-cog"></i> Settings</a></li>
                     <div class="d-lg-none d-block">
+                      <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item drop-primary" href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
                       <li><a class="dropdown-item drop-primary" href="{% url 'chat' %}"><i class="fas fa-comment"></i> Chat</a></li>
                       <li><a class="dropdown-item drop-primary" href="{% url 'friends' %}"><i class="fas fa-users"></i> Friends</a></li>
                     </div>
+                    {% if user.is_superuser %}
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item drop-primary" href="/admin/" target="_blank"><i class="fas fa-tools"></i> Admin panel</a></li>
+                    {% endif %}
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item drop-danger" href="{% url 'logout' %}">Logout</a></li>
+                    <li><a class="dropdown-item drop-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
             </li>
         </div>

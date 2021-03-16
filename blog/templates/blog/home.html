@@ -17,7 +17,7 @@
                     <div class="card posts" id="post{{forloop.counter}}">
                         <div class="card-header">
                             <a href="{% url 'profile' post.author.id %}">
-                                <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle" alt="Profile Picture">
+                                <img src="/{{ post.author.profile.image }}" height="52" width="52" class="rounded-circle" alt="Profile Picture">
                             </a>
                             <div class="header-text">
                                 <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
@@ -83,7 +83,7 @@
                                     <div class="comment">
                                         <div class="card-header">
                                             <a href="{% url 'profile' comment.author.id %}">
-                                                <img src="/{{ comment.author.profile.image }}" height="36" alt="Profile Picture">
+                                                <img src="/{{ comment.author.profile.image }}" height="36" width="36" alt="Profile Picture">
                                             </a>
                                         </div>
                                         <div class="comment-body">
@@ -135,7 +135,7 @@
                                 <form method="POST" id="comment" onsubmit="addComment({{forloop.counter}}, '{{request.user.profile.image}}', '{{request.user.get_full_name}}');return false;">
                                     <div class="post-wrapper">
                                         {% csrf_token %}
-                                        <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
+                                        <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36" width="36">
                                         <div class="input-container">
                                             <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
                                             <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
