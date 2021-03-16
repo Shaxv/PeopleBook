@@ -3,29 +3,79 @@
 {% load static %}
 
 {% block head %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
 
-    <textarea id="chat-text" cols="80" rows="30" disabled></textarea>
-    <br>
-    <input name="message" type="text" size="80">
-    <button type="button" id="sendMsg">Send</button>
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <div class="chat-wrapper">
+                    <div id="chat-text"></div>
+                    <input name="message" type="text" size="80" class="input" placeholder="Write your message here!">
+                    <button type="button" id="sendMsg" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send</button>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="member-wrapper">
+                    <h1>{{ room.title }}</h1>
+                    <hr>
+                    <h3>Members - {{ room.users.count }}</h3>
+                    <hr style="margin-bottom: 20px">
+                    <div class="row">
+                        {% for user in room.users.all %}
+                            <div class="col-4">
+                                <a href="{% url 'profile' user.id %}"><img src="/{{ user.profile.image }}" alt="Profile Picture"></a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{ room_name|json_script:"room-name" }}
 
     <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent)
+        const container = document.querySelector("#chat-text")
+
+        $(document).ready(function(){
+            container.innerHTML = (`Welcome to ${roomName} Chat Room! <br>`)
+        })
+
         document.querySelector("#sendMsg").onclick = function(e){
             const message = document.getElementsByName("message")[0]
 
-            chatSocket.send(JSON.stringify({
-                'message': message.value,
-            }))
+            if (message.value == ""){
+                
+                message.animate([
+                    {boxShadow: 'none'},
+                    {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
+                    {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
+                    {boxShadow: 'none'},
+                    {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
+                    {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
+                    {boxShadow: 'none'},
+                ], {
+                    duration: 850,
+                    iterations: 1,
+                })
 
-            message.value = ""
+            }
+
+            else{
+                chatSocket.send(JSON.stringify({
+                    'user_id': "{{ request.user.id }}",
+                    'message': message.value,
+                }))
+
+                message.value = ""
+            }
+
         }
-
-        const roomName = JSON.parse(document.getElementById('room-name').textContent)
 
         // 
         // FOR HEROKU USE WSS:// ELSE WS://
@@ -35,9 +85,13 @@
 
         chatSocket.onmessage = function(e){
             const data = JSON.parse(e.data)
-            console.log(data)
-            document.querySelector('#chat-text').value += (data.message + "\n")
-            document.querySelector('#chat-text').value += (data.username + "\n" + "\n")
+
+            const img = document.createElement("img")
+            img.src = data["image"]
+            container.appendChild(img)
+//<img src="/" alt="Profile Picture" height="100">
+            container.innerHTML += (`<div class="chat-message">${data.message}</div><br>`)
+            container.scrollTop = container.scrollHeight 
         }
 
     </script>

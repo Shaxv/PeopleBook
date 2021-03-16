@@ -12,12 +12,12 @@
     <div class="container">
         <div id="proba"></div>
         <div class="row justify-content-center">
-            <div class="col-9">
+            <div class="col-12">
                 {% for post in posts %}
                     <div class="card posts" id="post{{forloop.counter}}">
                         <div class="card-header">
                             <a href="{% url 'profile' post.author.id %}">
-                                <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle">
+                                <img src="/{{ post.author.profile.image }}" height="52" class="rounded-circle" alt="Profile Picture">
                             </a>
                             <div class="header-text">
                                 <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
@@ -51,9 +51,15 @@
                                 <hr>
                                 <form onsubmit="like({{forloop.counter}});return false;" id="likeForm{{forloop.counter}}">
                                     {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <button type="submit" class="btn full-btn like {% for likes in post.likes.all %}{% if request.user == likes.user %}active {% endif %}{% endfor %}" name="likebutton" id="likeContainer{{forloop.counter}}"><i class="fas fa-thumbs-up" id="likeIcon{{forloop.counter}}"></i> <span>Like</span></button>
+                                        </div>
+                                        <div class="col">
+                                            <a onclick="focusComment({{forloop.counter}})" id="commentContainer{{forloop.counter}}" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
+                                        </div>
+                                    </div>
                                     <input type="hidden" value="{{ post.id }}" id="post_id{{forloop.counter}}">
-                                    <button type="submit" class="btn full-btn like {% for likes in post.likes.all %}{% if request.user == likes.user %}active {% endif %}{% endfor %}" name="likebutton" id="likeContainer{{forloop.counter}}"><i class="fas fa-thumbs-up" id="likeIcon{{forloop.counter}}"></i> <span>Like</span></button>
-                                    <a onclick="focusComment({{forloop.counter}})" id="commentContainer{{forloop.counter}}" class="btn full-btn comment"><i class="fas fa-comment"></i> Comment</a>
                                 </form>
                                 <script>
                                     {% for likes in post.likes.all %}
@@ -77,7 +83,7 @@
                                     <div class="comment">
                                         <div class="card-header">
                                             <a href="{% url 'profile' comment.author.id %}">
-                                                <img src="/{{ comment.author.profile.image }}" height="36">
+                                                <img src="/{{ comment.author.profile.image }}" height="36" alt="Profile Picture">
                                             </a>
                                         </div>
                                         <div class="comment-body">
@@ -132,7 +138,7 @@
                                         <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
                                         <div class="input-container">
                                             <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
-                                            <textarea type="text" name="content" id="content{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
+                                            <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
                                             <button type="submit" class="btn full-btn" name="commentbutton"><i class="fas fa-paper-plane"></i></button>
                                         </div>
                                     </div>

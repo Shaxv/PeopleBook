@@ -376,9 +376,10 @@ const unlikeComment = (id, name) =>{
 const addComment = (id, image, name) =>{
     const csrf = document.getElementsByName('csrfmiddlewaretoken')
     const comment_post_id = document.getElementById("comment_post_id" + id)
-    const content = document.getElementById("content" + id)
+    const content = document.getElementById("comment" + id)
 
     const fd = new FormData
+    fd.append('csrfmiddlewaretoken', csrf[id].value)
     fd.append('comment_post_id', comment_post_id.value)
     fd.append('content', content.value)
     fd.append('add_comment', 'add_comment')

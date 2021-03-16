@@ -480,6 +480,7 @@ def Room_view(request, room_name):
         if room:
             if request.user in room.users.all():
                 context = {
+                    'room': room,
                     'room_name': room_name,
                 }
                 return render(request, "blog/chat_room.html", context)
@@ -493,6 +494,7 @@ def Room_view(request, room_name):
     else:
         room.users.add(request.user.id)
         context = {
+            'room': room,
             'room_name': room_name,
         }
         return render(request, "blog/chat_room.html", context)
@@ -502,6 +504,16 @@ def Chat_view(request):
     context = {}
     if request.method == "POST":
         if "create_room" in request.POST:
+
+            try:
+                x = Room.objects.get(title=request.POST["title"])
+            except Room.DoesNotExist:
+                x = None
+
+            if x != None:
+                messages.error(request, "There are already a chat room with the given name!")
+                return redirect(request.path_info)
+
             room = Room(title=request.POST["title"], limit=request.POST["limit"])
             room.save()
             room.users.add(request.user.id)
@@ -510,8 +522,8 @@ def Chat_view(request):
             room = Room.objects.get(id=request.POST["room_id"])
             room.users.remove(request.user.id)
 
-            if room.users.all == "":
-                room.remove()
+            if room.users.count() == 0:
+                room.delete()
         
         elif "enter_room" in request.POST:
             room = Room.objects.get(id=request.POST["room_id"])

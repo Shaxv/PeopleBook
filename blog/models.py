@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 import json
+from asgiref.sync import sync_to_async
 
 
 class Profile(models.Model):

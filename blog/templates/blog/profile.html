@@ -395,7 +395,7 @@
                                             <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
                                             <div class="input-container">
                                                 <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
-                                                <textarea type="text" name="content" id="content{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
+                                                <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
                                                 <button type="submit" class="btn full-btn" name="commentbutton"><i class="fas fa-paper-plane"></i></button>
                                             </div>
                                         </div>
@@ -703,7 +703,7 @@
                                             <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36">
                                             <div class="input-container">
                                                 <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
-                                                <textarea type="text" name="content" id="content{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
+                                                <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
                                                 <button type="submit" class="btn full-btn" name="commentbutton"><i class="fas fa-paper-plane"></i></button>
                                             </div>
                                         </div>

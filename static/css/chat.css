@@ -121,3 +121,60 @@ h1{
 .rightForm{
     margin-left: 6px;
 }
+
+
+
+/* Chat room */
+
+.member-wrapper h1{
+    text-align: center;
+}
+.member-wrapper hr{
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: var(--border-radius);
+    opacity: 1;
+}
+.member-wrapper h3{
+    text-align: center;
+}
+
+.chat-wrapper, .member-wrapper{
+    background: var(--gray-2);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+#chat-text{
+    height: 400px;
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+    padding: 12px;
+}
+.member-wrapper img{
+    border-radius: var(--border-radius);
+    border: 2px solid white;
+    outline: none;
+    height: 100%;
+    width: 100%;
+}
+.chat-wrapper .input{
+    padding: 10px;
+    margin: 30px 0;
+}
+.chat-wrapper .input:focus{
+    margin: 30px 0;
+}
+.chat-wrapper .btn{
+    width: 100% !important;
+    font-weight: 600;
+}
+.chat-wrapper .btn i{
+    margin-right: 4px;
+}
+
+.member-wrapper .col-4{
+    margin: 8px 0
+}
