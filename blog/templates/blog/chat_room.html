@@ -77,7 +77,7 @@
         // FOR HEROKU USE WSS:// ELSE WS://
         //
 
-        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/')
+        const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/' + roomName + '/')
 
         chatSocket.onmessage = function(e){
             const data = JSON.parse(e.data)
