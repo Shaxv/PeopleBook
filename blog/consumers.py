@@ -4,7 +4,7 @@ from .models import Room, User
 from asgiref.sync import sync_to_async
 import asyncio
 import datetime
-from django.utils import timezone
+from django.utils import timezone, dateformat
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -53,12 +53,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         username = event["username"]
         image = event["image"]
 
+        now = str(dateformat.format(timezone.now(), 'H:i:s'))
+
         await self.send(text_data=json.dumps({
             'user_id': user_id,
             'message': message,
             'username': username,
             'image': str(image),
-            'time': str(timezone.now),
+            'time': now,
         }))
 
     pass

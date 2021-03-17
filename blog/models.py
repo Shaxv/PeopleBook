@@ -1,9 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import auth
 from django.utils import timezone
 import json
-from asgiref.sync import sync_to_async
+from django.contrib.humanize.templatetags import humanize
 
+def UserMethods():
+    def get_date(self):
+        return humanize.naturaltime(self.date_joined)
+    auth.models.User.add_to_class("get_date", get_date)
+UserMethods()
 
 class Profile(models.Model):
     GENDER_CHOICES = (
@@ -31,6 +37,10 @@ class Profile(models.Model):
 class Friend(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user", default=None)
     friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friend", default=None)
+    date_created = models.DateTimeField(default=timezone.now)
+
+    def get_date(self):
+        return humanize.naturaltime(self.date_created)
 
     def __str__(self):
         return f"{self.user} and {self.friend}"
@@ -40,6 +50,9 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
+
+    def get_date(self):
+        return humanize.naturaltime(self.date_posted)
 
     def __str__(self):
         return f"{self.author}'s. {self.date_posted}"
@@ -51,6 +64,9 @@ class Comment(models.Model):
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     likes = models.ManyToManyField(User, related_name="fasz", default=None)
+
+    def get_date(self):
+        return humanize.naturaltime(self.date_posted)
 
     def __str__(self):
         return f"{self.post} - {self.author}"
@@ -72,6 +88,10 @@ class Room(models.Model):
     users = models.ManyToManyField(User, default=None)
     title = models.CharField(max_length=250, default=None)
     limit = models.IntegerField(null=True, blank=True)
+    date_created = models.DateTimeField(default=timezone.now)
+
+    def get_date(self):
+        return humanize.naturaltime(self.date_created)
 
     def __str__(self):
         return self.title

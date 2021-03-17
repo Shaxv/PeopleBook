@@ -39,9 +39,22 @@ header {
     width: 75% !important;
     padding-right: 50px !important;
   }
+  .img-icon{
+    bottom: 60px !important;
+  }
 }
 .profile-img img {
   position: absolute;
+}
+.img-icon{
+  position: absolute;
+  bottom: 40px;
+  opacity: 0.95;
+  text-align: center;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 }
 .img {
   height: 120px;
@@ -204,27 +217,3 @@ header .links .full-btn {
 /**/
 /**/
 /**/
-
-@media only screen and (max-width: 1400px) {
-  .friend-card {
-    margin: 0 auto;
-    text-align: left;
-  }
-  .friend-card a img {
-    width: 130px;
-  }
-}
-@media only screen and (max-width: 992px) {
-  .friend-card {
-    margin: unset;
-  }
-}
-@media only screen and (max-width: 767px) {
-  .friend-card {
-    margin: unset;
-    text-align: unset;
-  }
-  .friend-card a img {
-    width: unset;
-  }
-}

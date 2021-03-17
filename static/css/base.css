@@ -59,10 +59,6 @@ body{
     text-align: center;
 }
 
-@media only screen and (max-width: 992px){
-    
-}
-
 /* Dropdown */
 
 .dropdown-menu{
@@ -365,7 +361,7 @@ main{
     min-height: 50px;
     float: right;
     max-height: 110px;
-    width: 85%;
+    width: 94%;
     font-weight: 500;
 }
 
@@ -431,7 +427,7 @@ main{
 /* Friend card */
 
 .friend-card{
-    width: 50%;
+    width: 100%;
     white-space: nowrap;
 }
 .friend-card img{
@@ -456,4 +452,16 @@ main{
 
 .modal-content{
     background-color: var(--gray-2);
+}
+
+@media only screen and (max-width: 767px){
+    .posts #comment textarea{
+        width: 88% !important;
+    }
+}
+
+@media only screen and (max-width: 350px){
+    .posts #comment textarea{
+        width: 85% !important;
+    }
 }

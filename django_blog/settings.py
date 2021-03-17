@@ -104,8 +104,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
@@ -121,6 +119,9 @@ django_heroku.settings(locals())
 
 ASGI_APPLICATION = "django_blog.routing.application"
 
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'peoplebook'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, "static/credentials.json")
 
 CHANNEL_LAYERS = {
     "default": {

@@ -24,6 +24,21 @@ const likeAnimate = (id, type) =>{
     })
 }
 
+const errorHandler = (type) =>{
+    type.animate([
+        {boxShadow: 'none'},
+        {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
+        {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
+        {boxShadow: 'none'},
+        {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
+        {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
+        {boxShadow: 'none'},
+    ], {
+        duration: 850,
+        iterations: 1,
+    })
+}
+
 const commentLikeAnimate = (id) =>{
     const likeCount = document.getElementById("commentLikeCount" + id)
 

@@ -13,3 +13,4 @@ Pillow
 six
 sqlparse
 Twisted
+django-storages[google]

@@ -29,11 +29,22 @@
                                 </div>
                             </div>
                             <script>
-                                document.getElementById('id_image').onchange = function(){
-                                    document.getElementById("getImg").innerHTML = document.getElementById("id_image").value.split("\\").pop()
+                                const getImg = document.getElementById("getImg")
+                                const id_image = document.getElementById("id_image")
+
+                                id_image.onchange = function(){
+                                    const fileSize = id_image.files[0].size
+                                    if (fileSize > 5000000){
+                                        id_image.innerHTML = "Upload the image"
+                                        errorHandler(getImg)
+                                        handleAlerts("danger", "File size can't be greater than 10 MB")
+                                    }
+                                    else{
+                                        getImg.innerHTML = id_image.value.split("\\").pop()
+                                    }
                                 };
-                                document.getElementById('getImg').onclick = function(){
-                                    document.getElementById('id_image').click();
+                                getImg.onclick = function(){
+                                    id_image.click();
                                 };
                             </script>
                             <button type="submit" class="btn btn-primary" name="imgbutton">Change</button>
@@ -143,10 +154,11 @@
             <div class="container">
                 <div class="card profile-img">
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileBgModal">
-                        <img src="{% if view_user.profile.background != "" %}/{{ view_user.profile.background }}{% else %}{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
+                        <img src="{% if view_user.profile.background != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.background }}{% else %}https://storage.cloud.google.com/peoplebook/{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
                     </a>
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileImgModal">
-                        <img src="{% if view_user.profile.image != "" %}/{{ view_user.profile.image }}{% else %}{% static 'pics/unknownimg.jpg' %}{% endif %}" class="card-img img rounded-circle" alt="Profile Background">
+                        <i class="fas fa-camera img-icon fa-lg"></i>
+                        <img src="https://storage.cloud.google.com/peoplebook/{{ view_user.profile.image }}" class="card-img img rounded-circle" alt="Profile Background">
                     </a>
                 </div>
                 <h2><b>{{ view_user.get_full_name }}</b></h2>
@@ -183,7 +195,7 @@
                         <div class="card-body">
                             <div class="card-intro">Lives in: <b>{{ view_user.profile.country }}</b></div>
                             <div class="card-intro">Born in: <b>{{ view_user.profile.birth_date }}</b></div>
-                            <div class="card-intro">Joined since: <b>{{ view_user.date_joined }}</b></div>
+                            <div class="card-intro">Joined: <b>{{ view_user.get_date }}</b></div>
                             <div class="card-intro">Gender: <b>{{ view_user.profile.gender }}</b></div>
                         </div>
                     </div>
@@ -206,10 +218,10 @@
                                 {% for friend in friends %}
                                     {% if view_user.username == friend.user.username %}
 
-                                        <div class="col-4">
+                                        <div class="col-6 col-md-4 col-lg-3">
                                             <div class="friend-card">
                                                 <a href="{{ friend.friend.id }}">
-                                                    <img src="/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
                                                     <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
                                                 </a>
                                             </div>
@@ -217,10 +229,10 @@
 
                                     {% else %}
                                         
-                                        <div class="col-4">
+                                        <div class="col-6 col-md-4 col-lg-3">
                                             <div class="friend-card">
                                                 <a href="{{ friend.user.id }}">
-                                                    <img src="/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
                                                     <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
                                                 </a>
                                             </div>
@@ -247,7 +259,7 @@
                             <form onsubmit="newPost();return false;" enctype="multipart/form">
                                 {% csrf_token %}
                                 <div class="input-container">
-                                    <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="70" width="70">
+                                    <img src="https://storage.cloud.google.com/peoplebook/{{ view_user.profile.image }}" alt="Profile Picture" height="70" width="70">
                                     <textarea type="text" name="content" placeholder="What's on your mind?" class="input"></textarea>
                                     <button type="submit" class="btn full-btn"><i class="fas fa-paper-plane"></i></button>
                                 </div>
@@ -280,7 +292,7 @@
                         <div class="card posts" id="post{{forloop.counter}}">
                             <div class="card-header">
                                 <a href="{% url 'profile' post.author.id %}">
-                                    <img src="/{{ post.author.profile.image }}" height="52" width="52" class="rounded-circle">
+                                    <img src="https://storage.cloud.google.com/peoplebook/{{ post.author.profile.image }}" height="52" width="52" class="rounded-circle">
                                 </a>
                                 <div class="header-text">
                                     <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
@@ -346,7 +358,7 @@
                                         <div class="comment">
                                             <div class="card-header">
                                                 <a href="{% url 'profile' comment.author.id %}">
-                                                    <img src="/{{ comment.author.profile.image }}" height="36" width="36">
+                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ comment.author.profile.image }}" height="36" width="36">
                                                 </a>
                                             </div>
                                             <div class="comment-body">
@@ -398,7 +410,7 @@
                                     <form method="POST" id="comment" onsubmit="addComment({{forloop.counter}}, '{{request.user.profile.image}}', '{{request.user.get_full_name}}');return false;">
                                         <div class="post-wrapper">
                                             {% csrf_token %}
-                                            <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36" width="36">
+                                            <img src="https://storage.cloud.google.com/peoplebook/{{ request.user.profile.image }}" alt="Profile Picture" height="36" width="36">
                                             <div class="input-container">
                                                 <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
                                                 <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>
@@ -457,7 +469,7 @@
                                     <form action="" method="POST" id="comment">
                                         <div class="post-wrapper">
                                             {% csrf_token %}
-                                            <img src="/{{ view_user.profile.image }}" alt="Profile Picture" height="36" width="36">
+                                            <img src="https://storage.cloud.google.com/peoplebook/{{ view_user.profile.image }}" alt="Profile Picture" height="36" width="36">
                                             <div class="input-container">
                                                 <input type="hidden" value="{{ post.id }}" name="post_id">
                                                 <textarea type="text" name="content" placeholder="Write a comment!" class="input"></textarea>
@@ -504,10 +516,10 @@
             <div class="container">
                 <div class="card profile-img">
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileBgModal">
-                        <img src="{% if view_user.profile.background != "" %}/{{ view_user.profile.background }}{% else %}{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
+                        <img src="{% if view_user.profile.background != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.background }}{% else %}https://storage.cloud.google.com/peoplebook/{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
                     </a>
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileImgModal">
-                        <img src="{% if view_user.profile.image != "" %}/{{ view_user.profile.image }}{% else %}{% static 'pics/unknownimg.png' %}{% endif %}" alt="Profile Picture" height="130" width="130" class="rounded-circle img card-img">
+                        <img src="{% if view_user.profile.image != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.image }}{% else %}https://storage.cloud.google.com/peoplebook/{% static 'pics/unknownimg.png' %}{% endif %}" alt="Profile Picture" height="130" width="130" class="rounded-circle img card-img">
                     </a>
                 </div>
                 <h2><b>{{ view_user.get_full_name }}</b></h2>
@@ -573,7 +585,7 @@
                                         <div class="col-4">
                                             <div class="friend-card">
                                                 <a href="{{ friend.friend.id }}">
-                                                    <img src="/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
                                                     <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
                                                 </a>
                                             </div>
@@ -584,7 +596,7 @@
                                         <div class="col-4">
                                             <div class="friend-card">
                                                 <a href="{{ friend.user.id }}">
-                                                    <img src="/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
                                                     <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
                                                 </a>
                                             </div>
@@ -608,7 +620,7 @@
                         <div class="card posts" id="post{{forloop.counter}}">
                             <div class="card-header">
                                 <a href="{% url 'profile' post.author.id %}">
-                                    <img src="/{{ post.author.profile.image }}" height="52" width="52" class="rounded-circle">
+                                    <img src="https://storage.cloud.google.com/peoplebook/{{ post.author.profile.image }}" height="52" width="52" class="rounded-circle">
                                 </a>
                                 <div class="header-text">
                                     <a href="{% url 'profile' post.author.id %}"><h4>{{ post.author.get_full_name }}</h4></a>
@@ -666,7 +678,7 @@
                                         <div class="comment">
                                             <div class="card-header">
                                                 <a href="{% url 'profile' comment.author.id %}">
-                                                    <img src="/{{ comment.author.profile.image }}" height="36" height="36">
+                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ comment.author.profile.image }}" height="36" height="36">
                                                 </a>
                                             </div>
                                             <div class="comment-body">
@@ -718,7 +730,7 @@
                                     <form method="POST" id="comment" onsubmit="addComment({{forloop.counter}}, '{{request.user.profile.image}}', '{{request.user.get_full_name}}');return false;">
                                         <div class="post-wrapper">
                                             {% csrf_token %}
-                                            <img src="/{{ request.user.profile.image }}" alt="Profile Picture" height="36" width="36">
+                                            <img src="https://storage.cloud.google.com/peoplebook/{{ request.user.profile.image }}" alt="Profile Picture" height="36" width="36">
                                             <div class="input-container">
                                                 <input type="hidden" value="{{ post.id }}" id="comment_post_id{{forloop.counter}}">
                                                 <textarea type="text" name="content" id="comment{{forloop.counter}}" placeholder="Write a comment!" class="input"></textarea>

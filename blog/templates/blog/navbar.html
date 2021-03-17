@@ -8,7 +8,7 @@
 
     <div class="d-flex">
       <a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="{% url 'home' %}">
-        <img src="{% static 'pics/small_logo.png' %}" alt="Logo" id="navLogo">
+        <img src="https://storage.cloud.google.com/peoplebook{% static 'pics/small_logo.png' %}" alt="Logo" id="navLogo">
       </a>
     </div>
 
@@ -51,7 +51,7 @@
         <div class="dropdown dropstart btn-group">
             <li class="nav-item me-3 me-lg-1" style="list-style-type: none;">
                 <a class="nav-link d-sm-flex align-items-sm-center dropdown-toggle" role="button" id="userDropMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src="/{{ request.user.profile.image }}" class="rounded-circle" height="26" width="26" alt="ProfilePicture">
+                  <img src="https://storage.cloud.google.com/peoplebook/{{ request.user.profile.image }}" class="rounded-circle" height="26" width="26" alt="ProfilePicture">
                   <strong class="d-none d-sm-block ms-1">{{ request.user.get_full_name }}</strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="userDropMenu" id="dropDown">

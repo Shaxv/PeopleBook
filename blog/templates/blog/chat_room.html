@@ -12,14 +12,14 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-8">
+            <div class="col-12 col-md-8 order-md-last">
                 <div class="chat-wrapper">
                     <div id="chat-text"></div>
                     <input name="message" type="text" size="80" class="input" placeholder="Write your message here!">
                     <button type="button" id="sendMsg" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send</button>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4 order-md-first">
                 <div class="member-wrapper">
                     <h1>{{ room.title }}</h1>
                     <hr>
@@ -28,7 +28,7 @@
                     <div class="row">
                         {% for user in room.users.all %}
                             <div class="col-4">
-                                <a href="{% url 'profile' user.id %}"><img src="/{{ user.profile.image }}" alt="Profile Picture"></a>
+                                <a href="{% url 'profile' user.id %}"><img src="https://storage.cloud.google.com/peoplebook/{{ user.profile.image }}" alt="Profile Picture"></a>
                             </div>
                         {% endfor %}
 
@@ -59,20 +59,7 @@
             var message = document.getElementsByName("message")[0]
 
             if (message.value == ""){
-                
-                message.animate([
-                    {boxShadow: 'none'},
-                    {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
-                    {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
-                    {boxShadow: 'none'},
-                    {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
-                    {boxShadow: '0 0 0 0.25rem rgba(232, 94, 108, 0.8)'},
-                    {boxShadow: 'none'},
-                ], {
-                    duration: 850,
-                    iterations: 1,
-                })
-
+                errorHandler(message)
             }
 
             else{
@@ -95,32 +82,30 @@
         chatSocket.onmessage = function(e){
             const data = JSON.parse(e.data)
 
+            console.log(data["time"])
+
             if (data["user_id"] == "{{request.user.id}}"){
                 container.innerHTML += 
                     (`
-                    <div class="d-flex right">
-                        <h1>${data.user_id}</h1>
+                    <div class="d-flex">
+                        <img src="https://storage.cloud.google.com/peoplebook/{{request.user.profile.image}}" height="40" width="40" class="chat-img">
                         <div class="chat-message rightBg">
                             ${data.message}
                         </div>
-                        <img src="/{{request.user.profile.image}}" height="40" width="40" class="chat-img">
-                        <p>${data.time}</p>
                     </div>
-                    <br>
+                    <p>${data.time}</p>
                     `)
             }
             else{
                 container.innerHTML +=
                     (`
-                    <div class="d-flex left">
-                        <h1>${data.user_id}</h1>
-                        <img src="/${data.image}" height="40" width="40" class="chat-img">
+                    <div class="d-flex">
+                        <img src="https://storage.cloud.google.com/peoplebook/${data.image}" height="40" width="40" class="chat-img">
                         <div class="chat-message leftBg">
                             ${data.message}
                         </div>
                     </div>
                     <p>${data.time}</p>
-                    <br>
                     `)
             }
 

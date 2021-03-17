@@ -8,7 +8,7 @@ from django.contrib import messages
 import os
 from django.db.models import Q
 import json
-
+from django.core.files.storage import default_storage
 
 def Home(request):
 
@@ -300,10 +300,12 @@ def Profile_view(request, user_id):
                 if img_form.is_valid():
 
                     if "image" in request.FILES:
+                        if default_storage.exists(f"{profile.image}"):
+                            default_storage.delete(f"{profile.image}")
+                        
                         profile.image = request.FILES["image"]
                         img_form.save()
-                        if os.path.isfile(f"{profile.image}"):
-                            os.remove(profile.image.path)
+
                         messages.success(request, "Successfully changed image!")
                         return HttpResponseRedirect(request.path_info)
 

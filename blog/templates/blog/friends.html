@@ -18,7 +18,7 @@
                         <div class="col-4">
                             <div class="friend-card">
                                 <a href="/profile/{{ user.id }}">
-                                    <img src="/{{ user.profile.image }}" alt="User{{forloop.counter}}" class="friend-img">
+                                    <img src="https://storage.cloud.google.com/peoplebook/{{ user.profile.image }}" alt="User{{forloop.counter}}" class="friend-img">
                                     <h5 class="friend-title">{{ user.get_full_name }}</h5>
                                 </a>
                             </div>
@@ -41,7 +41,7 @@
                             <div class="col-4">
                                 <div class="friend-card">
                                     <a href="/profile/{{ friend.friend.id }}">
-                                        <img src="/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                        <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
                                         <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
                                     </a>
                                 </div>
@@ -52,7 +52,7 @@
                             <div class="col-4">
                                 <div class="friend-card">
                                     <a href="/profile/{{ friend.user.id }}">
-                                        <img src="/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                        <img src="https://storage.cloud.google.com/peoplebook{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
                                         <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
                                     </a>
                                 </div>

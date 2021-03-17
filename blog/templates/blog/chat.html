@@ -62,7 +62,7 @@
                             <h1>{{ room.title }}</h1>
                             <div class="room-pics">
                                 {% for user in room.users.all %}
-                                    <img src="/{{ user.profile.image }}" height="75" width="75" class="rounded-circle {% if room.users.count != "0" and room.users.count != "1" %}nemNulla{% else %}{% endif %}">
+                                    <img src="https://storage.cloud.google.com/peoplebook/{{ user.profile.image }}" height="75" width="75" class="rounded-circle {% if room.users.count != "0" and room.users.count != "1" %}nemNulla{% else %}{% endif %}">
                                 {% endfor %}
                             </div>
                         </div>
@@ -87,6 +87,9 @@
                                     <button type="submit" class="btn btn-primary" name="enter_room"><i class="fas fa-sign-in-alt fa-lg"></i> Join</button>
                                 </form>
                             {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <p>Created {{ room.get_date }}</p>
                         </div>
                     </div>
                 </div>
