@@ -95,3 +95,13 @@ class Room(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Message(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    content = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def get_date(self):
+        return humanize.naturaltime(self.date_posted)

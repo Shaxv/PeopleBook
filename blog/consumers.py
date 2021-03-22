@@ -1,6 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from .models import Room, User
+from .models import Room, User, Message
 from asgiref.sync import sync_to_async
 import asyncio
 import datetime
@@ -54,6 +54,12 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         image = event["image"]
 
         now = str(dateformat.format(timezone.now(), 'H:i:s'))
+
+        user = User.objects.get(id=user_id)
+        room = Room.objects.get(title=self.room_name)
+
+        m = Message(room=room, user=user, content=message)
+        m.save()
 
         await self.send(text_data=json.dumps({
             'user_id': user_id,

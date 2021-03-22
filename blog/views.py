@@ -530,9 +530,11 @@ def Room_view(request, room_name):
     if request.method != "POST":
         if room:
             if request.user in room.users.all():
+                messages = Message.objects.filter(room=room).all()
                 context = {
                     'room': room,
                     'room_name': room_name,
+                    'messages': messages,
                 }
                 return render(request, "blog/chat_room.html", context)
             else:

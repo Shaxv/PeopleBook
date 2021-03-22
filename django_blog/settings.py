@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import django_heroku
+from urllib.parse import urlparse
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -131,8 +132,7 @@ CHANNEL_LAYERS = {
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
-"""
-CHANNEL_LAYERS = {
+"""CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
@@ -149,5 +149,4 @@ CACHES = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         }
     }
-}
-"""
+}"""
