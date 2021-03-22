@@ -525,7 +525,7 @@ def Friends_view(request):
 
 @login_required
 def Room_view(request, room_name):
-    room = Room.objects.get(title=room_name)
+    room = get_object_or_404(Room, title=room_name)
 
     if request.method != "POST":
         if room:

@@ -8,9 +8,10 @@
     <div class="container">
 
         <div class="card">
-            <div class="card-header">
+            <div class="card-header text-center">
                 <div class="card-title" style="margin-bottom: 0;">Users</div>
                 <div class="card-sub-title" style="color: gray; font-size: 19px">{{ user_count }} user</div>
+                <hr>
             </div>
             <div class="card-body text-center">
                 <div class="row">
@@ -29,9 +30,10 @@
         </div>
 
         <div class="card">
-            <div class="card-header">
+            <div class="card-header text-center">
                 <div class="card-title" style="margin-bottom: 0;">Friends</div>
                 <div class="card-sub-title" style="color: gray; font-size: 19px">{{ friends_count }} friend</div>
+                <hr>
             </div>
             <div class="card-body text-center">
                 <div class="row">
@@ -52,7 +54,7 @@
                             <div class="col-4">
                                 <div class="friend-card">
                                     <a href="/profile/{{ friend.user.id }}">
-                                        <img src="https://storage.cloud.google.com/peoplebook{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                        <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
                                         <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
                                     </a>
                                 </div>
