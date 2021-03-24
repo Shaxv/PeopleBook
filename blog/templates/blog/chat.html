@@ -60,9 +60,17 @@
                     <div class="card room-card">
                         <div class="card-header">
                             <h1>{{ room.title }}</h1>
-                            <div class="room-pics">
+                            <div class="room-pics row justify-content-center text-center">
                                 {% for user in room.users.all %}
-                                    <img src="https://storage.cloud.google.com/peoplebook/{{ user.profile.image }}" height="75" width="75" class="rounded-circle {% if room.users.count != "0" and room.users.count != "1" %}nemNulla{% else %}{% endif %}">
+                                    <div class="room-div col-4">
+                                        {% if forloop.counter >= 4 %}
+                                        {% else %}
+                                            {% if user == room.creator %}
+                                                <i class="fas fa-crown"></i>
+                                            {% endif %}
+                                            <img src="https://storage.cloud.google.com/peoplebook/{{ user.profile.image }}" height="75" width="75" class="rounded-circle {% if room.users.count != "0" and room.users.count != "1" %}nemNulla{% else %}{% endif %}">
+                                        {% endif %}
+                                    </div>
                                 {% endfor %}
                             </div>
                         </div>

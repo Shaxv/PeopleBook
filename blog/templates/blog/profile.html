@@ -206,7 +206,7 @@
                             {% if friends.count != 0 %}
                                 <div class="card-link"><a href="">See All Friends</a></div>
                             {% else %}
-                                <div class="card-link"><a href="{% url 'home' %}">See all Users</a></div>
+                                <div class="card-link"><a href="{% url 'friends' %}">See all Users</a></div>
                             {% endif %}
                             <div class="card-subtitle">{{ friends_count }} Friends</div>
                         </div>
@@ -218,7 +218,7 @@
                                 {% for friend in friends %}
                                     {% if view_user.username == friend.user.username %}
 
-                                        <div class="col-6 col-md-4 col-lg-3">
+                                        <div class="col-6 col-md-4">
                                             <div class="friend-card">
                                                 <a href="{{ friend.friend.id }}">
                                                     <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
@@ -229,7 +229,7 @@
 
                                     {% else %}
                                         
-                                        <div class="col-6 col-md-4 col-lg-3">
+                                        <div class="col-6 col-md-4">
                                             <div class="friend-card">
                                                 <a href="{{ friend.user.id }}">
                                                     <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
@@ -590,7 +590,7 @@
                                 {% for friend in friends %}
                                     {% if view_user.username == friend.user.username %}
 
-                                        <div class="col-4">
+                                        <div class="col-6 col-md-4">
                                             <div class="friend-card">
                                                 <a href="{{ friend.friend.id }}">
                                                     <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
@@ -601,7 +601,7 @@
 
                                     {% else %}
                                         
-                                        <div class="col-4">
+                                        <div class="col-6 col-md-4">
                                             <div class="friend-card">
                                                 <a href="{{ friend.user.id }}">
                                                     <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">

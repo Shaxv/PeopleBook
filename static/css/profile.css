@@ -139,6 +139,7 @@ header .links .full-btn {
   max-height: 160px;
   padding-top: 10px;
   padding-left: 14px;
+  padding-right: 50px !important;
   padding-bottom: 10px;
   border-radius: 10px;
   width: 88%;

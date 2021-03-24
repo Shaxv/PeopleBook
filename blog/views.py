@@ -565,7 +565,7 @@ def Chat_view(request):
             if x != None:
                 return JsonResponse({'message': 'alreadyExists'})
             else:
-                room = Room(title=request.POST["title"], limit=request.POST["limit"])
+                room = Room(creator=request.user, title=request.POST["title"], limit=request.POST["limit"])
                 room.save()
                 room.users.add(request.user.id)
                 return JsonResponse({'message': 'success'})

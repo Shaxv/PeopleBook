@@ -102,6 +102,7 @@ class Like(models.Model):
 
 
 class Room(models.Model):
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="creator", default=None, null=True)
     users = models.ManyToManyField(User, default=None)
     title = models.CharField(max_length=250, default=None)
     limit = models.IntegerField(null=True, blank=True)

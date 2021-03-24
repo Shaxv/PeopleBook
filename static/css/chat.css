@@ -29,13 +29,24 @@ h1{
     background: var(--light-gray) !important;
     border-radius: var(--border-radius);
     border: 2px solid white;
+    display: flex;
+    justify-content: center;
 }
-
+.room-div{
+    position: relative;
+}
+.fa-crown{
+    color: rgb(239, 243, 23);
+    position: absolute;
+    z-index: 10;
+    right: 22px;
+    top: -8px;
+    transform: rotate(30deg);
+}
 .room-pics img{
     border: 2px solid white;
 }
 .nemNulla{
-    margin-left: -20px;
 }
 .col-4 .btn, .card-body{
     width: 100% !important;
