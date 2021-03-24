@@ -154,7 +154,7 @@
             <div class="container">
                 <div class="card profile-img">
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileBgModal">
-                        <img src="{% if view_user.profile.background != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.background }}{% else %}https://storage.cloud.google.com/peoplebook/{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
+                        <img src="{% if view_user.profile.background != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.background }}{% else %}https://storage.cloud.google.com/peoplebook{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
                     </a>
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileImgModal">
                         <i class="fas fa-camera img-icon fa-lg"></i>
@@ -275,9 +275,17 @@
                                         };
                                     </script>
 
-                                    <button type="button" onclick="upload('image');" id="getImage" class="btn full-btn"><i class="fas fa-file-image"></i> Images</button>
-                                    <button type="button" onclick="upload('video')" id="getVideo" class="btn full-btn"><i class="fas fa-file-video"></i> Videos</button>
-                                    <button type="button" onclick="upload('file')" id="getFile" class="btn full-btn"><i class="fas fa-file-alt"></i> Files</button>
+                                    <div class="row">
+                                        <div class="col-6 col-md-4">
+                                            <button type="button" onclick="upload('image');" id="getImage" class="btn full-btn"><i class="fas fa-file-image"></i> Images</button>
+                                        </div>
+                                        <div class="col-6 col-md-4">
+                                            <button type="button" onclick="upload('video')" id="getVideo" class="btn full-btn"><i class="fas fa-file-video"></i> Videos</button>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <button type="button" onclick="upload('file')" id="getFile" class="btn full-btn"><i class="fas fa-file-alt"></i> Files</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -516,10 +524,10 @@
             <div class="container">
                 <div class="card profile-img">
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileBgModal">
-                        <img src="{% if view_user.profile.background != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.background }}{% else %}https://storage.cloud.google.com/peoplebook/{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
+                        <img src="{% if view_user.profile.background != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.background }}{% else %}https://storage.cloud.google.com/peoplebook{% static 'pics/unknownbg.jpg' %}{% endif %}" class="card-img" alt="Profile Background">
                     </a>
                     <a role="button" data-bs-toggle="modal" data-bs-target="#profileImgModal">
-                        <img src="{% if view_user.profile.image != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.image }}{% else %}https://storage.cloud.google.com/peoplebook/{% static 'pics/unknownimg.png' %}{% endif %}" alt="Profile Picture" height="130" width="130" class="rounded-circle img card-img">
+                        <img src="{% if view_user.profile.image != "" %}https://storage.cloud.google.com/peoplebook/{{ view_user.profile.image }}{% else %}https://storage.cloud.google.com/peoplebook{% static 'pics/unknownimg.png' %}{% endif %}" alt="Profile Picture" height="130" width="130" class="rounded-circle img card-img">
                     </a>
                 </div>
                 <h2><b>{{ view_user.get_full_name }}</b></h2>

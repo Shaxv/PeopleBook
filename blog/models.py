@@ -4,12 +4,25 @@ from django.contrib import auth
 from django.utils import timezone
 import json
 from django.contrib.humanize.templatetags import humanize
+from io import BytesIO
+from django.core.files import File
+from PIL import Image
 
 def UserMethods():
     def get_date(self):
         return humanize.naturaltime(self.date_joined)
     auth.models.User.add_to_class("get_date", get_date)
 UserMethods()
+
+def make_image(image, size):
+    img = Image.open(image)
+    img.convert('RGB')
+    img.thumbnail(size)
+    thumb_io = BytesIO()
+    img.save(thumb_io, 'JPEG', quality=85)
+    image = File(thumb_io, name=image.name)
+    return image
+
 
 class Profile(models.Model):
     GENDER_CHOICES = (
@@ -29,6 +42,10 @@ class Profile(models.Model):
     country = models.CharField(max_length=50, choices=COUNTRY_CHOICES, blank=True, null=True)
     image = models.ImageField(upload_to="static/pics/profile_pics/", blank=True, null=True)
     background = models.ImageField(upload_to="static/pics/bg_pics/", blank=True)
+
+    def save(self, *args, **kwargs):
+        self.image = make_image(image=self.image, size=(100, 100))
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user}'s profile"

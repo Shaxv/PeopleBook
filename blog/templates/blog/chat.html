@@ -54,53 +54,51 @@
                 </form>
             </div>
             
-            <div id="rooms" class="row">
-                {% for room in rooms %}
+            {% for room in rooms %}
 
-                    <div class="col-4">
-                        <div class="card room-card">
-                            <div class="card-header">
-                                <h1>{{ room.title }}</h1>
-                                <div class="room-pics">
-                                    {% for user in room.users.all %}
-                                        <img src="https://storage.cloud.google.com/peoplebook/{{ user.profile.image }}" height="75" width="75" class="rounded-circle {% if room.users.count != "0" and room.users.count != "1" %}nemNulla{% else %}{% endif %}">
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                {% if request.user in room.users.all %}
-                                    <div class="d-flex">
-                                        <form action="{% url 'chat_room' room %}" id="leftForm{{ forloop.counter }}" class="rightForm">
-                                            <button type="submit" class="btn btn-primary"><i class="fas fa-external-link-square-alt"></i> Enter</button>
-                                        </form>
-
-                                        <form action="" method="POST" id="rightForm{{ forloop.counter }}" class="rightForm">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="room_id" value="{{ room.id }}">
-                                            <button type="submit" class="btn btn-danger" name="leave_room">Leave <i class="fas fa-sign-out-alt fa-lg"></i></button>
-                                        </form>
-
-                                    </div>
-                                {% else %}
-                                    <form action="" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="room_id" value="{{ room.id }}">
-                                        <button type="submit" class="btn btn-primary" name="enter_room"><i class="fas fa-sign-in-alt fa-lg"></i> Join</button>
-                                    </form>
-                                {% endif %}
-                            </div>
-                            <div class="card-footer">
-                                <p>Created {{ room.get_date }}</p>
+                <div class="col-4">
+                    <div class="card room-card">
+                        <div class="card-header">
+                            <h1>{{ room.title }}</h1>
+                            <div class="room-pics">
+                                {% for user in room.users.all %}
+                                    <img src="https://storage.cloud.google.com/peoplebook/{{ user.profile.image }}" height="75" width="75" class="rounded-circle {% if room.users.count != "0" and room.users.count != "1" %}nemNulla{% else %}{% endif %}">
+                                {% endfor %}
                             </div>
                         </div>
+                        <div class="card-body">
+                            {% if request.user in room.users.all %}
+                                <div class="d-flex">
+                                    <form action="{% url 'chat_room' room %}" id="leftForm{{ forloop.counter }}" class="rightForm">
+                                        <button type="submit" class="btn btn-primary"><i class="fas fa-external-link-square-alt"></i> Enter</button>
+                                    </form>
+
+                                    <form action="" method="POST" id="rightForm{{ forloop.counter }}" class="rightForm">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="room_id" value="{{ room.id }}">
+                                        <button type="submit" class="btn btn-danger" name="leave_room">Leave <i class="fas fa-sign-out-alt fa-lg"></i></button>
+                                    </form>
+
+                                </div>
+                            {% else %}
+                                <form action="" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="room_id" value="{{ room.id }}">
+                                    <button type="submit" class="btn btn-primary" name="enter_room"><i class="fas fa-sign-in-alt fa-lg"></i> Join</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <p>Created {{ room.get_date }}</p>
+                        </div>
                     </div>
+                </div>
 
-                {% empty %}
+            {% empty %}
 
-                    <p>There are 0 chat rooms</p>
+                <p>There are 0 chat rooms</p>
 
-                {% endfor %}
-            </div>
+            {% endfor %}
         </div>
     </div>
 

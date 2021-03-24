@@ -530,11 +530,11 @@ def Room_view(request, room_name):
     if request.method != "POST":
         if room:
             if request.user in room.users.all():
-                messages = Message.objects.filter(room=room).all()
+                chat_messages = Message.objects.filter(room=room).all()
                 context = {
                     'room': room,
                     'room_name': room_name,
-                    'messages': messages,
+                    'chat_messages': chat_messages,
                 }
                 return render(request, "blog/chat_room.html", context)
             else:
@@ -545,7 +545,6 @@ def Room_view(request, room_name):
             messages.error(request, "There are no such room!")
             return redirect(Chat_view)
     else:
-
         room.users.add(request.user.id)
         context = {
             'room': room,
@@ -556,23 +555,24 @@ def Room_view(request, room_name):
 @login_required
 def Chat_view(request):
     context = {}
-    if request.method == "POST":
+    if request.is_ajax() and request.method == "POST":
         if "create_room" in request.POST:
-
             try:
                 x = Room.objects.get(title=request.POST["title"])
             except Room.DoesNotExist:
                 x = None
-
+            
             if x != None:
-                messages.error(request, "There are already a chat room with the given name!")
-                return redirect(request.path_info)
+                return JsonResponse({'message': 'alreadyExists'})
+            else:
+                room = Room(title=request.POST["title"], limit=request.POST["limit"])
+                room.save()
+                room.users.add(request.user.id)
+                return JsonResponse({'message': 'success'})
 
-            room = Room(title=request.POST["title"], limit=request.POST["limit"])
-            room.save()
-            room.users.add(request.user.id)
+    if request.method == "POST":
 
-        elif "leave_room" in request.POST:
+        if "leave_room" in request.POST:
             room = Room.objects.get(id=request.POST["room_id"])
             room.users.remove(request.user.id)
 
@@ -582,9 +582,6 @@ def Chat_view(request):
         elif "enter_room" in request.POST:
             room = Room.objects.get(id=request.POST["room_id"])
             room.users.add(request.user.id)
-    
-    else:
-        pass
 
     rooms = Room.objects.all().order_by("title") 
 

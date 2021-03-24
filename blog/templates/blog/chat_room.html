@@ -14,17 +14,15 @@
             <div class="col-12 col-md-8 order-md-last">
                 <div class="chat-wrapper">
                     <div id="chat-text">
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="d-flex">
-                                    <img src="https://storage.cloud.google.com/peoplebook/{{request.user.profile.image}}" height="40" width="40" class="chat-img">
-                                    <div class="chat-message {% if message.user.id == request.user.id %}rightBg{% else %}leftBg{% endif %}">
-                                        {{ message.content }}
-                                    </div>
+                        {% for message in chat_messages %}
+                            <div class="d-flex">
+                                <img src="https://storage.cloud.google.com/peoplebook/{{message.user.profile.image}}" height="40" width="40" class="chat-img">
+                                <div class="chat-message {% if message.user.id == request.user.id %}rightBg{% else %}leftBg{% endif %}">
+                                    {{ message.content }}
                                 </div>
-                                <p>{{ message.get_date }}</p>                            
-                            {% endfor %}
-                        {% endif %}
+                            </div>
+                            <p>{{ message.get_date }}</p>                            
+                        {% endfor %}
                     </div>
                     <input name="message" type="text" size="80" class="input" placeholder="Write your message here!">
                     <button type="button" id="sendMsg" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send</button>
@@ -55,10 +53,6 @@
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent)
         const container = document.querySelector("#chat-text")
-
-        $(document).ready(function(){
-            container.innerHTML += (`Welcome to ${roomName} Chat Room! <br><br>`)
-        })
 
         document.querySelector("#sendMsg").onclick = function(e){
             var message = document.getElementsByName("message")[0]

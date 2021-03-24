@@ -154,6 +154,9 @@ h1{
     position: relative;
     overflow: hidden;
 }
+.member-wrapper .justify-content-center{
+    min-height: 90px;
+}
 #chat-text{
     overflow-x: auto;
     overflow-y: auto;

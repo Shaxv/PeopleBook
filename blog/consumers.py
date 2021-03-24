@@ -5,6 +5,7 @@ from asgiref.sync import sync_to_async
 import asyncio
 import datetime
 from django.utils import timezone, dateformat
+from django.contrib.humanize.templatetags import humanize
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -31,10 +32,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
 
         user = User.objects.get(id=text_data_json["user_id"])
+        message = text_data_json['message']
+
         image = user.profile.image
 
-        message = text_data_json['message']
-        username = self.scope["user"].username
+        room = Room.objects.get(title=self.room_name)
+
+        m = Message(room=room, user=user, content=message)
+        m.save()
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -42,7 +47,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'type': 'chat_message',
                 'user_id': text_data_json["user_id"],
                 'message': message,
-                'username': username,
                 'image': str(image),
             }
         )
@@ -50,23 +54,15 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         user_id = event["user_id"]
         message = event["message"]
-        username = event["username"]
         image = event["image"]
 
-        now = str(dateformat.format(timezone.now(), 'H:i:s'))
-
-        user = User.objects.get(id=user_id)
-        room = Room.objects.get(title=self.room_name)
-
-        m = Message(room=room, user=user, content=message)
-        m.save()
+        now = humanize.naturaltime(datetime.datetime.now())
 
         await self.send(text_data=json.dumps({
             'user_id': user_id,
             'message': message,
-            'username': username,
             'image': str(image),
-            'time': now,
+            'time': str(now),
         }))
 
     pass
