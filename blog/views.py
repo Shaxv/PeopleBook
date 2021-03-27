@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from blog.models import *
+from blog.models import Room, User, Post, Like, Message, Friend, Comment
 from blog.forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -69,9 +69,11 @@ def Home(request):
         users = User.objects.all()
         user_count = User.objects.count()
         comments = Comment.objects.all()
+        friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
 
         context = {
             'title': 'Home',
+            'friend_requests': friend_requests,
             'posts': posts,
             'users': users,
             'user_count': user_count,
@@ -194,7 +196,7 @@ def create_post(author, content):
 
 
 def create_friendship(user, friend):
-    f = Friend(user=user, friend=friend)
+    f = Friend(user=user, friend=friend, status="Sent")
     f.save()
 
 
@@ -385,6 +387,7 @@ def Profile_view(request, user_id):
             friends = Friend.objects.filter(Q(user=view_user) | Q(friend=view_user)).all()
             friends_count = Friend.objects.filter(Q(user=view_user) | Q(friend=view_user)).count()
             is_friend = Friend.objects.filter(Q(user=view_user, friend=request.user) | Q(user=request.user, friend=view_user)).exists()
+            friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
 
             users = User.objects.all()
             posts = Post.objects.filter(author=view_user).order_by('-date_posted').all()
@@ -395,6 +398,7 @@ def Profile_view(request, user_id):
             context = {
                 'user_id': user_id,
                 'title': 'Profile',
+                'friend_requests': friend_requests,
                 'view_user': view_user,
                 'img_form': img_form,
                 'bg_form': bg_form,
@@ -466,9 +470,11 @@ def Profile_settings(request):
         ProfileForm = ProfileUpdateForm(instance=request.user.profile)
         img_form = ProfileImgForm(instance=request.user.profile)
         bg_form = ProfileBgForm(instance=request.user.profile)
+        friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
 
         context = {
             'title': 'Profile Update',
+            'friend_requests': friend_requests,
             'uform': UserForm,
             'pform': ProfileForm,
             'imgform': img_form,
@@ -493,9 +499,11 @@ def Post_settings(request, id):
             return HttpResponseRedirect(request.path_info)
     else:
         form = UpdatePost(instance=post)
+        friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
 
         context = {
             'title': 'Post Settings',
+            'friend_requests': friend_requests,
             'form': form,
         }
         return render(request, "blog/post_settings.html", context)
@@ -504,19 +512,37 @@ def Post_settings(request, id):
 @login_required
 def Friends_view(request):
 
-    users = User.objects.all()
-    user_count = User.objects.all().count()
-    friends = Friend.objects.filter(Q(user=request.user) | Q(friend=request.user)).all()
-    friends_count = Friend.objects.filter(Q(user=request.user) | Q(friend=request.user)).count()
+    if request.is_ajax() and request.method == "POST":
+        u = User.objects.get(id=request.POST["id"])
+        f = Friend.objects.get(user=u, friend=request.user)
 
-    context = {
-        'title': 'Friends',
-        'friends': friends,
-        'friends_count': friends_count,
-        'users': users,
-        'user_count': user_count,
-    }
-    return render(request, "blog/friends.html", context)
+        if "declineFriend" in request.POST:
+            f.delete()
+            return JsonResponse({"message": "declined"})
+        
+        elif "acceptFriend" in request.POST:
+            f.status = "Accepted"
+            f.save()
+            return JsonResponse({"message": "accepted"})
+
+    else:
+        users = User.objects.all()
+        user_count = User.objects.all().count()
+        friends = Friend.objects.filter(Q(user=request.user) | Q(friend=request.user)).all()
+        friends_count = Friend.objects.filter(Q(user=request.user) | Q(friend=request.user)).count()
+        friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
+        friend_requests_users = Friend.objects.filter(friend=request.user, status="Sent").all()
+
+        context = {
+            'title': 'Friends',
+            'friend_requests': friend_requests,
+            'friend_requests_users': friend_requests_users,
+            'friends': friends,
+            'friends_count': friends_count,
+            'users': users,
+            'user_count': user_count,
+        }
+        return render(request, "blog/friends.html", context)
 
 #
 # CHAT
@@ -526,6 +552,7 @@ def Friends_view(request):
 @login_required
 def Room_view(request, room_name):
     room = get_object_or_404(Room, title=room_name)
+    friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
 
     if request.method != "POST":
         if room:
@@ -533,6 +560,7 @@ def Room_view(request, room_name):
                 chat_messages = Message.objects.filter(room=room).all()
                 context = {
                     'room': room,
+                    'friend_requests': friend_requests,
                     'room_name': room_name,
                     'chat_messages': chat_messages,
                 }
@@ -585,8 +613,11 @@ def Chat_view(request):
 
     rooms = Room.objects.all().order_by("title") 
 
+    friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
+
     context = {
         "title": "Chat Rooms",
+        'friend_requests': friend_requests,
         "rooms": rooms,
     }
 

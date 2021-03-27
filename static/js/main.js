@@ -440,6 +440,71 @@ const commentHandler = (id, status, content, image, name) =>{
 
 
 //
+// Friends
+//
+
+const declineFriend = (id) =>{
+    const user = document.getElementById("user" + id)
+    const csrf = document.getElementsByName("csrfmiddlewaretoken")
+    const userid = document.getElementById("declineId" + id)
+    const userMain = document.getElementById("userMain")
+
+    const fd = new FormData()
+    fd.append('csrfmiddlewaretoken', csrf[0].value)
+    fd.append('id', userid.value)
+    fd.append('declineFriend', 'declineFriend')
+
+    $.ajax({
+        type: 'POST',
+        action: '',
+        data: fd,
+        success: function(response){
+            console.log(response)
+            handleAlerts("success", "Successfully declined the request!")
+            if ( id==1 ){ userMain.remove() }
+            else{ user.remove() }
+        },
+        error: function(error){
+            console.log(error)
+        },
+        cache: false,
+        contentType: false,
+        processData: false,    
+    })
+} 
+
+const acceptFriend = (id) =>{
+    const user = document.getElementById("user" + id)
+    const csrf = document.getElementsByName("csrfmiddlewaretoken")
+    const userid = document.getElementById("acceptId" + id)
+    const userMain = document.getElementById("userMain")
+
+    const fd = new FormData()
+    fd.append('csrfmiddlewaretoken', csrf[0].value)
+    fd.append('id', userid.value)
+    fd.append('acceptFriend', 'acceptFriend')
+
+    $.ajax({
+        type: 'POST',
+        action: '',
+        data: fd,
+        success: function(response){
+            console.log(response)
+            if (id == 1){ userMain.remove() }
+            else{ user.remove() }
+            handleAlerts("success", "Successfully accepted the request!")
+        },
+        error: function(error){
+            console.log(error)
+        },
+        cache: false,
+        contentType: false,
+        processData: false,    
+    })
+}
+
+
+//
 // Test
 //
 

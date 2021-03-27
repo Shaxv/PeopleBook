@@ -39,9 +39,9 @@ h1{
     color: rgb(239, 243, 23);
     position: absolute;
     z-index: 10;
-    right: 22px;
-    top: -8px;
-    transform: rotate(30deg);
+    top: -16px;
+    left: 0;
+    right: 0;
 }
 .room-pics img{
     border: 2px solid white;

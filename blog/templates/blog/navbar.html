@@ -34,7 +34,9 @@
         <li class="nav-item me-3 me-lg-1">
           <a class="nav-link" href="{% url 'friends' %}" title="Friends">
             <span><i class="fas fa-users fa-lg"></i></span>
-            <span class="badge rounded-pill badge-notification bg-danger">2</span>
+            {% if friend_requests != 0 %}
+              <span class="badge rounded-pill badge-notification bg-danger">{{ friend_requests }}</span>
+            {% endif %}
           </a>
         </li>
     </ul>
@@ -61,7 +63,7 @@
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item drop-primary" href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
                       <li><a class="dropdown-item drop-primary" href="{% url 'chat' %}"><i class="fas fa-comment"></i> Chat</a></li>
-                      <li><a class="dropdown-item drop-primary" href="{% url 'friends' %}"><i class="fas fa-users"></i> Friends</a></li>
+                      <li><a class="dropdown-item drop-primary" href="{% url 'friends' %}"><i class="fas fa-users"></i> Friends {% if friend_requests != 0 %}<span class="badge rounded-pill badge-notification bg-danger">{{ friend_requests }}</span> {% endif %}</a></li>
                     </div>
                     {% if user.is_superuser %}
                       <li><hr class="dropdown-divider"></li>

@@ -216,28 +216,30 @@
                                 <!-- Friends -->
 
                                 {% for friend in friends %}
-                                    {% if view_user.username == friend.user.username %}
+                                    {% if friend.status == "Accepted" %}
+                                        {% if view_user.username == friend.user.username %}
 
-                                        <div class="col-6 col-md-4">
-                                            <div class="friend-card">
-                                                <a href="{{ friend.friend.id }}">
-                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
-                                                    <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
-                                                </a>
+                                            <div class="col-6 col-md-4">
+                                                <div class="friend-card">
+                                                    <a href="{{ friend.friend.id }}">
+                                                        <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                        <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                    {% else %}
-                                        
-                                        <div class="col-6 col-md-4">
-                                            <div class="friend-card">
-                                                <a href="{{ friend.user.id }}">
-                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
-                                                    <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
-                                                </a>
+                                        {% else %}
+                                            
+                                            <div class="col-6 col-md-4">
+                                                <div class="friend-card">
+                                                    <a href="{{ friend.user.id }}">
+                                                        <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                        <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
 
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
 

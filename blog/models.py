@@ -45,15 +45,21 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         self.image = make_image(image=self.image, size=(100, 100))
-        super().save(*args, **kwargs)
+        super().save(self, *args, **kwargs)
 
     def __str__(self):
         return f"{self.user}'s profile"
 
 
 class Friend(models.Model):
+    STATUS_CHOICES = (
+        ('Sent', 'Sent'),
+        ('Accepted', 'Accepted'),
+        ('Declined', 'Declined'),
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user", default=None)
     friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friend", default=None)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True)
     date_created = models.DateTimeField(default=timezone.now)
 
     def get_date(self):
