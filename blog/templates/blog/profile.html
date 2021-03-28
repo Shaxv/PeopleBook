@@ -505,7 +505,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <h5 class="modal-title">Are you sure you want to remove {{ view_user.get_full_name }}?</h5>
-                        <form action="" method="POST">
+                        <form method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger" name="removefriend">Remove</button>
                             <a class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
@@ -536,10 +536,13 @@
                 <h5>{{ view_user.username }}</h5>
                 <hr>
                 <div class="links">
-
-                    {% if is_friend == True %}
-                        {% csrf_token %}
-                        <a class="btn full-btn" role="button" data-bs-toggle="modal" data-bs-target="#removeFriend"><i class="fas fa-user-minus"></i> Remove friend</a>
+                    {% if is_friend %}
+                        {% if is_friend.status == "Sent" %}
+                            <button type="button" class="btn full-btn" disabled>Pending</button>
+                        {% else %}
+                            {% csrf_token %}
+                            <a class="btn full-btn" role="button" data-bs-toggle="modal" data-bs-target="#removeFriend"><i class="fas fa-user-minus"></i> Remove friend</a>
+                        {% endif %}
                     {% else %}
                         <form action="" method="POST">
                             {% csrf_token %}
@@ -590,28 +593,30 @@
                                 <!-- Friends -->
 
                                 {% for friend in friends %}
-                                    {% if view_user.username == friend.user.username %}
+                                    {% if friend.status == "Accept" %}
+                                        {% if view_user.username == friend.user.username %}
 
-                                        <div class="col-6 col-md-4">
-                                            <div class="friend-card">
-                                                <a href="{{ friend.friend.id }}">
-                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
-                                                    <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
-                                                </a>
+                                            <div class="col-6 col-md-4">
+                                                <div class="friend-card">
+                                                    <a href="{{ friend.friend.id }}">
+                                                        <img src="https://storage.cloud.google.com/peoplebook/{{ friend.friend.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                        <h5 class="friend-title">{{ friend.friend.get_full_name }}</h5>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                    {% else %}
-                                        
-                                        <div class="col-6 col-md-4">
-                                            <div class="friend-card">
-                                                <a href="{{ friend.user.id }}">
-                                                    <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
-                                                    <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
-                                                </a>
+                                        {% else %}
+                                            
+                                            <div class="col-6 col-md-4">
+                                                <div class="friend-card">
+                                                    <a href="{{ friend.user.id }}">
+                                                        <img src="https://storage.cloud.google.com/peoplebook/{{ friend.user.profile.image }}" alt="Friend{{forloop.counter}}" class="friend-img">
+                                                        <h5 class="friend-title">{{ friend.user.get_full_name }}</h5>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
 
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
 

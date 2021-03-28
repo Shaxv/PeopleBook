@@ -439,7 +439,7 @@ function Form3Submit(){
         success: function(response){
             console.log(response)
             if (response["message"] == "success"){
-                handleAlerts("success", "Successfully registered!")
+                location.href = location.href.replace("register", "login")
             }
             else{
                 $.each(response["message"], function(index, value){

@@ -53,9 +53,11 @@ body{
     color: #C7C8C9;
 }
 .d-lg-flex{
+    position: absolute;
+    left: 0;
+    right: 0;
     width: 100%;
     margin: 0 auto;
-    margin-left: 180px;
     text-align: center;
 }
 

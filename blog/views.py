@@ -10,6 +10,7 @@ from django.db.models import Q
 import json
 from django.core.files.storage import default_storage
 
+@login_required
 def Home(request):
 
     if request.is_ajax() and request.method == "POST":
@@ -90,6 +91,7 @@ def Login(request):
 
     else:
         form = ""
+        next = request.POST.get('next', request.GET.get('next', ''))
 
         if request.method == 'POST':
             username = request.POST['username']
@@ -100,6 +102,8 @@ def Login(request):
             if user:
                 login(request, user)
                 messages.success(request, "Successfully signed in!")
+                if next:
+                    return HttpResponseRedirect(next)
                 return redirect("profile", user.id)
             else:
                 form = LoginForm()
@@ -167,7 +171,7 @@ def Register(request):
                     Profile.objects.filter(id=request.session["r_profile"]).update(user=user)
 
                     messages.success(request, "Successfully created the account!")
-                    return redirect("/login/")
+                    return JsonResponse({'message': 'success'})
                 else:
                     return JsonResponse({'message': form.errors})
 
@@ -201,7 +205,10 @@ def create_friendship(user, friend):
 
 
 def delete_friendship(user, friend):
-    f = Friend.objects.filter(user=user, friend=friend)
+    try:
+        f = Friend.objects.get(user=user, friend=friend)
+    except Friend.DoesNotExist:
+        f = Friend.objects.get(user=friend, friend=user)
     f.delete()
 
 
@@ -385,8 +392,8 @@ def Profile_view(request, user_id):
             intro_form = ProfileIntroForm(instance=profile)
 
             friends = Friend.objects.filter(Q(user=view_user) | Q(friend=view_user)).all()
-            friends_count = Friend.objects.filter(Q(user=view_user) | Q(friend=view_user)).count()
-            is_friend = Friend.objects.filter(Q(user=view_user, friend=request.user) | Q(user=request.user, friend=view_user)).exists()
+            friends_count = Friend.objects.filter(Q(user=view_user, status="Accepted") | Q(friend=view_user, status="Accepted")).count()
+            is_friend = Friend.objects.filter(Q(user=view_user, friend=request.user) | Q(user=request.user, friend=view_user)).all()
             friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
 
             users = User.objects.all()
