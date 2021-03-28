@@ -231,7 +231,7 @@ def delete_like(post, user):
 def Logout(request):
     logout(request)
     messages.success(request, "Successfully logged out!")
-    return redirect("home")
+    return HttpResponseRedirect(Login)
 
 
 @login_required
@@ -393,7 +393,10 @@ def Profile_view(request, user_id):
 
             friends = Friend.objects.filter(Q(user=view_user) | Q(friend=view_user)).all()
             friends_count = Friend.objects.filter(Q(user=view_user, status="Accepted") | Q(friend=view_user, status="Accepted")).count()
-            is_friend = Friend.objects.filter(Q(user=view_user, friend=request.user) | Q(user=request.user, friend=view_user)).all()
+            if view_user != request.user:
+                is_friend = Friend.objects.get(Q(user=view_user, friend=request.user) | Q(user=request.user, friend=view_user))
+            else:
+                is_friend = ""
             friend_requests = Friend.objects.filter(friend=request.user, status="Sent").count()
 
             users = User.objects.all()

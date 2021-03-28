@@ -462,7 +462,7 @@ const declineFriend = (id) =>{
             console.log(response)
             handleAlerts("success", "Successfully declined the request!")
             if ( id==1 ){ userMain.remove() }
-            else{ user.remove() }
+            else{ user.remove(); }
         },
         error: function(error){
             console.log(error)
@@ -491,7 +491,7 @@ const acceptFriend = (id) =>{
         success: function(response){
             console.log(response)
             if (id == 1){ userMain.remove() }
-            else{ user.remove() }
+            else{ user.remove(); }
             handleAlerts("success", "Successfully accepted the request!")
         },
         error: function(error){

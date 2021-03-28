@@ -538,7 +538,7 @@
                 <div class="links">
                     {% if is_friend %}
                         {% if is_friend.status == "Sent" %}
-                            <button type="button" class="btn full-btn" disabled>Pending</button>
+                            <button type="button" class="btn full-btn">Pending...</button>
                         {% else %}
                             {% csrf_token %}
                             <a class="btn full-btn" role="button" data-bs-toggle="modal" data-bs-target="#removeFriend"><i class="fas fa-user-minus"></i> Remove friend</a>
