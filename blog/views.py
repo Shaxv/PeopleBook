@@ -14,7 +14,6 @@ from django.core.files.storage import default_storage
 def Home(request):
 
     if request.is_ajax() and request.method == "POST":
-
         if 'like' in request.POST:
             post = Post.objects.get(id=request.POST["post_id"])
             user = get_object_or_404(User, id=request.user.id)
@@ -382,6 +381,11 @@ def Profile_view(request, user_id):
                 post = get_object_or_404(Post, id=request.POST["post_id"])
                 create_comment(post=post, author=request.user,content=request.POST["content"])
                 messages.success(request, f"Successfully created a comment!")
+                return HttpResponseRedirect(request.path_info)
+
+            elif 'mbbutton' in request.POST:
+                post = get_object_or_404(Post, id=request.POST["post_id"])
+                messages.error(request, request.user.username)
                 return HttpResponseRedirect(request.path_info)
 
         else:
